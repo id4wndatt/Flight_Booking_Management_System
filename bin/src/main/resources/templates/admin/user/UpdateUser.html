@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head th:replace="~{admin/fragmentsAdmin :: admin_head_pageList}"/>
+<body>
+<style>
+  .error {
+    color: red;
+  }
+  p {
+    padding: 0;
+    margin: 0;
+  }
+  .paddingName {
+    padding: 10px 0 4px;
+  }
+</style>
+
+<!-- Top container -->
+<header th:replace="~{admin/fragmentsAdmin :: admin_header}"/>
+
+<!-- Sidebar/menu -->
+<div th:replace="~{admin/fragmentsAdmin :: admin_menu}"></div>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div th:replace="~{admin/fragmentsAdmin :: admin_overlay}"></div>
+
+<!-- !PAGE CONTENT! -->
+<div class="w3-main" style="margin-left:300px;margin-top:43px;background-color: #f1f1f1">
+
+  <h1 style="font-weight: bold; font-size: 25px; padding: 25px 15px">Update user</h1>
+  <form style="padding-left: 20px;" th:method="POST" th:action="@{/admin/updateUser/{id}(id=${user.getUserID()})}">
+    <p class="paddingName">userID</p>
+    <input type="text" name="userID" placeholder="userID" th:value="${user.getUserID()}" disabled/>
+    <p th:if="${userID}" class="error">[[${userID}]]</p>
+    <br/>
+    <p class="paddingName">username</p>
+    <input type="text" name="username" placeholder="username" th:value="${user.getUsername()}" disabled/>
+    <p th:if="${username}" class="error">[[${username}]]</p>
+    <br/>
+    <p class="paddingName">role</p>
+<!--    <input type="number" name="role" placeholder="role" th:value="${user.getRole()}"/>-->
+    <select name="role">
+      <option th:value="${user.getRole()}" th:text="${user.getRole()}"></option>
+      <option th:value="1" th:text="1"></option>
+      <option th:value="2" th:text="2"></option>
+      <option th:value="3" th:text="3"></option>
+    </select>
+    <p th:if="${role}" class="error">[[${role}]]</p>
+    <br/>
+    <br/>
+    <button type="submit" value="add">update</button>
+  </form>
+  <a href="/admin/flightList">Flight list</a>
+</div>
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head th:replace="~{admin/fragmentsAdmin :: admin_head_pageList}"/>
+<body>
+<style>
+    .update {
+        background-color: #1c98ea;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+        width: 50%;
+        border: 1px solid #000;
+    }
+    .form-delete {
+        width: 50%;
+    }
+    .delete:hover {
+        background-color: #8c0505;
+    }
+    .delete {
+        background-color: red;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+        width: 100%;
+        border: 1px solid #000;
+        border-left: none;
+    }
+
+    .update:hover {
+        background-color: #0e4870;
+    }
+</style>
+
+<!-- Top container -->
+<header th:replace="~{admin/fragmentsAdmin :: admin_header}"/>
+
+<!-- Sidebar/menu -->
+<div th:replace="~{admin/fragmentsAdmin :: admin_menu}"></div>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div th:replace="~{admin/fragmentsAdmin :: admin_overlay}"></div>
+
+<!-- !PAGE CONTENT! -->
+<div class="w3-main" style="margin-left:300px;margin-top:43px;background-color: #f1f1f1">
+
+    <h1 style="font-weight: bold; font-size: 25px; padding: 25px 15px">Seat category list</h1>
+
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th><a th:href="@{'/admin/seatCategoryList/page/'+${currentPage}+'?sortBy=seatCategoryId'}">seat category ID</a></th>
+            <th><a th:href="@{'/admin/seatCategoryList/page/'+${currentPage}+'?sortBy=categoryName'}">category name</a></th>
+            <th><a th:href="@{'/admin/seatCategoryList/page/'+${currentPage}+'?sortBy=luggageAttach'}">luggage attach</a></th>
+            <th><a th:href="@{'/admin/seatCategoryList/page/'+${currentPage}+'?sortBy=feeCategory'}">fee category</a></th>
+            <th style="width: 170px;">action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <th:block th:each="seatCategory : ${seatCategories}">
+            <tr>
+                <td th:utext="${seatCategory.getSeatCategoryID()}">..</td>
+                <td th:utext="${seatCategory.getCategoryName()}">..</td>
+                <td th:utext="${seatCategory.getLuggageAttach()}">..</td>
+                <td th:utext="${seatCategory.getFormatFeeCategory(seatCategory.getFeeCategory())}">..</td>
+                <td style="display: flex">
+                    <button class="update">
+                        <a style="text-decoration: none; color: white;" th:href="@{/admin/updateSeatCategory/{id}(id=${seatCategory.getSeatCategoryID()})}">Update</a>
+                    </button>
+
+                    <form class="form-delete" method="POST" th:action="@{/admin/deleteCategorySeat/{id}(id=${seatCategory.getSeatCategoryID()})}">
+                        <button  class="delete" type="submit" onclick="if (!(confirm('Are you sure you want to delete this seat category?'))) return false">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        </th:block>
+        </tbody>
+    </table>
+    <div th:replace="~{admin/fragmentsAdmin :: pagination('seatCategoryList', 'seat categories')}"></div>
+
+    <a href="/admin/addSeatCategory">Add new seat category</a>
+</div>
+</body>
+</html>

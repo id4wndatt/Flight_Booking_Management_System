@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head th:replace="~{fragments::html_head}">
+    <script th:src="@{../static/script.js}"></script>
+<body>
+    <!-- Navigation Bar -->
+    <div th:replace="~{fragments::navigationBar}"/>
+    <!-- Header -->
+    <header class="w3-display-container w3-content w3-hide-small" style="max-width:1500px">
+        <div th:if="${messageSuccess}">
+            <script>
+                Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: '[[${messageSuccess}]]',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            </script>
+        </div>
+        <div th:if="${messageError}">
+            <script>
+                Swal.fire({
+                    position: 'center',
+                    icon: 'error',
+                    title: '[[${messageError}]]',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            </script>
+        </div>
+        <img class="w3-image" th:src="@{/w3images/london2.jpg}" alt="London" width="1500" height="700">
+        <div class="w3-container w3-display-middle w3-white w3-card-4" style="width: 400px;padding: 0;">
+            <div class="w3-display-top-middle w3-text-red" >
+                <h1 style="text-align: center;">GOGO</h1>
+            </div>
+            <div th:if="${message}" class="w3-panel w3-pale-red w3-text-red">[[${message}]]</div>
+            <form th:action="@{/account/signup/save}" id="form_signup" th:object="${user}" th:method="post" class="w3-container">
+                <input name="userid" th:field="*{userID}" type="hidden">
+                <input id="role" name="role" th:field="*{role}" th:type="hidden" th:value="1" class="w3-input w3-border" >
+                <p>
+                    <label>Username</label>
+                    <input th:field="*{username}" name="username" class="w3-input w3-border" type="text" required>
+                </p>
+                <p>
+                    <lable>Password</lable>
+                    <input id="password" name="password" th:field="*{password}" class="w3-input w3-border" type="password" required>
+                </p>
+                <p>
+                    <lable>Refill Password</lable>
+                    <input name="refill_password" class="w3-input w3-border" type="password" required>
+                </p>
+                <p>
+                    <lable>Email</lable>
+                <input name="email" class="w3-input w3-border" type="email" required>
+                </p>
+                <p style="text-align: center;"><input class="w3-btn w3-red" style="width: 100px;" type="submit" value="Sign up"></p>
+            </form>
+            <script>
+                $(document).ready(function (){
+                    $.validator.addMethod("passwordRule",function (value,element,args) {
+                        return /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[A-Za-z0-9])(?=.{8,})/.test(value);
+                    },'Password must contains 1 lowercase letter, one uppercase letter, one digit, one special character and at least 8 characters');
+                    $.validator.addMethod("emailRule",function (value,element,args) {
+                        return /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$/.test(value);
+                    },'This email is invalid!');
+                    $("#form_signup").validate({
+                        rules:{
+                            username:{
+                                minlength:5
+                            },
+                            refill_password:{
+                                equalTo:'#password'
+                            },
+                            password:{
+                                minlength: 8,
+                                passwordRule:true
+                            },
+                            email:{
+                                emailRule:true
+                            }
+                        },
+                        messages:{
+                            username:{
+                                required:"Please enter the username!",
+                                minlength:"Please enter at least 5 characters"
+                            },
+                            password:{
+                                required:"Please enter the password!",
+                            },
+                            refill_password:{
+                                required:"Please refill the password!",
+                                equalTo: "Password and refilled password should be matched!"
+                            },
+                            email:{
+                                required:"Please enter your email!"
+                            }
+                        }
+                    });
+                });
+            </script>
+        </div>
+    </header>
+    <footer th:replace="~{fragments::footer}" />
+</body>
+</html>

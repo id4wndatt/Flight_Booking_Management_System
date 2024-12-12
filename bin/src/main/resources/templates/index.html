@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head th:replace="~{fragments :: html_head}"/>
+<body class="w3-light-grey">
+
+<!-- Navigation Bar -->
+<div th:replace="~{fragments:: navigationBar}"/>
+
+<!-- Header -->
+<header th:replace="~{fragments::header}"/>
+
+<!-- Page content -->
+<div class="w3-content" style="max-width:1100px;">
+  <div class="w3-container">
+    <h3>The Best Destination</h3>
+    <p>Travel with us and see nature at its finest.</p>
+  </div>
+  <div class="w3-row-padding w3-text-white w3-large w3-margin-top">
+    <div class="w3-half w3-margin-bottom w3-card">
+      <div class="w3-display-container">
+        <img src="/w3images/CauVang.jpg" alt="Paris" style="width:100%">
+        <a class="w3-button w3-dark-grey w3-hover-red w3-margin-bottom w3-display-bottomleft w3-padding" th:href="'/flights/takeFlightV2/'+1+'&'+1">Ha Noi - Da Nang</a>
+      </div>
+    </div>
+    <div class="w3-half">
+      <div class="w3-row-padding" style="margin:0 -16px">
+        <div class="w3-half w3-margin-bottom w3-card">
+          <div class="w3-display-container">
+            <img src="/w3images/CauVang.jpg" alt="Paris" style="width:100%">
+            <a class="w3-button w3-dark-grey w3-hover-red w3-margin-bottom w3-display-bottomleft w3-padding" th:href="'/flights/takeFlightV2/'+1+'&'+1">Ha Noi - Da Nang</a>
+          </div>
+        </div>
+        <div class="w3-half w3-margin-bottom w3-card">
+          <div class="w3-display-container">
+            <img src="/w3images/CauVang.jpg" alt="Paris" style="width:100%">
+            <a class="w3-button w3-dark-grey w3-hover-red w3-margin-bottom w3-display-bottomleft w3-padding" th:href="'/flights/takeFlightV2/'+1+'&'+1">Ha Noi - Da Nang</a>
+          </div>
+        </div>
+      </div>
+      <div class="w3-row-padding" style="margin:0 -16px">
+        <div class="w3-half w3-margin-bottom w3-card">
+          <div class="w3-display-container">
+            <img src="/w3images/CauVang.jpg" alt="Paris" style="width:100%">
+            <a class="w3-button w3-dark-grey w3-hover-red w3-margin-bottom w3-display-bottomleft w3-padding" th:href="'/flights/takeFlightV2/'+1+'&'+1">Ha Noi - Da Nang</a>
+          </div>
+        </div>
+        <div class="w3-half w3-margin-bottom w3-card">
+          <div class="w3-display-container">
+            <img src="/w3images/CauVang.jpg" alt="Paris" style="width:100%">
+            <a class="w3-button w3-dark-grey w3-hover-red w3-margin-bottom w3-display-bottomleft w3-padding" th:href="'/flights/takeFlightV2/'+1+'&'+1">Ha Noi - Da Nang</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Explore Nature -->
+  <div class="w3-container">
+    <h3>Explore Nature</h3>
+    <p>Travel with us and see nature at its finest.</p>
+  </div>
+  <div class="w3-row-padding">
+    <div class="w3-half w3-margin-bottom w3-card">
+      <img src="/w3images/CauVang.jpg" alt="Da Nang" style="width:100%">
+      <div class="w3-container w3-white">
+        <h3>Ha Noi - Da Nang</h3>
+        <p class="w3-opacity">Oneway from 750,000 VND</p>
+        <p>Praesent tincidunt sed tellus ut rutrum sed vitae justo.</p>
+        <a class="w3-button w3-dark-grey w3-hover-red w3-margin-bottom" th:href="'/flights/takeFlightV2/'+1+'&'+1">Buy Tickets</a>
+      </div>
+    </div>
+    <div class="w3-half w3-margin-bottom w3-card">
+      <img src="/w3images/CauVang.jpg" alt="Da Nang" style="width:100%">
+      <div class="w3-container w3-white">
+        <h3>Ha Noi - Da Nang</h3>
+        <p class="w3-opacity">Oneway from 750,000 VND</p>
+        <p>Praesent tincidunt sed tellus ut rutrum sed vitae justo.</p>
+        <a class="w3-button w3-dark-grey w3-hover-red w3-margin-bottom" th:href="'/flights/takeFlightV2/'+1+'&'+1">Buy Tickets</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Newsletter -->
+  <div class="w3-container">
+    <div class="w3-panel w3-padding-16 w3-black w3-opacity w3-card w3-hover-opacity-off">
+      <h2>Get the best offers first!</h2>
+      <p>Join our newsletter.</p>
+      <label>E-mail</label>
+      <input class="w3-input w3-border" type="text" placeholder="Your Email address">
+      <button type="button" class="w3-button w3-red w3-margin-top">Subscribe</button>
+    </div>
+  </div>
+
+  <!-- Contact -->
+  <div class="w3-container">
+    <h2>Contact</h2>
+    <p>Let us book your next trip!</p>
+    <i class="fa fa-map-marker" style="width:30px"></i> Chicago, US<br>
+    <i class="fa fa-phone" style="width:30px"></i> Phone: +00 151515<br>
+    <i class="fa fa-envelope" style="width:30px"> </i> Email: mail@mail.com<br>
+    <form action="/action_page.php" target="_blank">
+      <p><input class="w3-input w3-padding-16 w3-border" type="text" placeholder="Name" required name="Name"></p>
+      <p><input class="w3-input w3-padding-16 w3-border" type="text" placeholder="Email" required name="Email"></p>
+      <p><input class="w3-input w3-padding-16 w3-border" type="text" placeholder="Message" required name="Message"></p>
+      <p><button class="w3-button w3-black w3-padding-large" type="submit">SEND MESSAGE</button></p>
+    </form>
+  </div>
+
+  <!-- End page content -->
+</div>
+<button style="" class="w3-text-dark-grey" id="btn-scroll" onclick="ontop()"><i class='fa fa-angle-double-up'></i></button>
+<script>
+  function ontop(){
+    document.documentElement.scrollTop = 0;
+  }
+
+</script>
+<!-- Footer -->
+<footer th:replace="~{fragments::footer}"/>
+</body>
+</html>

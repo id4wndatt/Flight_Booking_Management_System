@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head th:replace="~{admin/fragmentsAdmin :: admin_head_pageList}"/>
+<body>
+<style>
+    .update {
+        background-color: #1c98ea;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+        width: 50%;
+        border: 1px solid #000;
+    }
+    .form-delete {
+        width: 50%;
+    }
+    .delete:hover {
+        background-color: #8c0505;
+    }
+    .delete {
+        background-color: red;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+        width: 100%;
+        border: 1px solid #000;
+        border-left: none;
+    }
+
+    .update:hover {
+        background-color: #0e4870;
+    }
+</style>
+
+<!-- Top container -->
+<header th:replace="~{admin/fragmentsAdmin :: admin_header}"/>
+
+<!-- Sidebar/menu -->
+<div th:replace="~{admin/fragmentsAdmin :: admin_menu}"></div>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div th:replace="~{admin/fragmentsAdmin :: admin_overlay}"></div>
+
+<!-- !PAGE CONTENT! -->
+<div class="container-fluid" style="margin-left:300px;margin-top:43px;background-color: #f1f1f1">
+
+    <div style="margin-top: 20px">
+        <h2>[[${pageTitle}]]</h2>
+    </div>
+
+    <form th:action="@{/admin/airlineCompanies/save}" method="post" style="max-width: 700px; margin: 0 auto; margin-top: 70px;"
+          enctype="multipart/form-data"
+          th:object="${airlineCompany}" onsubmit="return checkEmailUnique(this);">
+
+
+
+        <input type="hidden" th:field="*{airlineID}"/>
+        <div class="border border-secondary rounded p-3">
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label">Airline Name:</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" th:field="*{airlineName}" required minlength="1" maxlength="128" />
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label">Logo:</label>
+                <div class="col-sm-8">
+                    <input type="hidden" th:field="*{airlineLogo}">
+                    <input type="file" id="fileImage" name="image" accept="image/png, image/jpeg">
+                    <img th:if="${airlineCompany.airlineLogo == null}"  id="thumbnail" atl="Photos preview" th:src="@{/images/default-user.png}" class="img-fluid"  style="width: 250px;" />
+                    <img th:if="${airlineCompany.airlineLogo != null}" th:src="@{${airlineCompany.getPhotosImagePath()}}"  style="width: 250px;"  id="thumbnail" atl="Photos preview"/>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <input type="submit" value="Save" class="btn btn-primary m-3" />
+                <input type="button" value="Cancel" class="btn btn-secondary" id="buttonCancel" style="background-color: #cccccc"/>
+            </div>
+        </div>
+    </form>
+
+
+</div>
+<script>
+    $(document).ready(function() {
+        $("#buttonCancel").on("click", function() {
+            window.location = "[[@{/admin/airlineCompanies}]]";
+        });
+
+        $("#fileImage").change(function() {
+            fileSize = this.files[0].size;
+            <!--            alert("File size: " + fileSize);-->
+            if (fileSize > 1048576) {
+                this.setCustomValidity("You need choose an image less than 1MB!");
+                this.reportValidity();
+            } else {
+                this.setCustomValidity("");
+                showImageThumbnail(this);
+            }
+
+
+        });
+    });
+
+    function showImageThumbnail(fileInput) {
+        var file = fileInput.files[0];
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            $("#thumbnail").attr("src", e.target.result);
+        };
+
+        reader.readAsDataURL(file);
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head th:fragment="html_head">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" th:href="@{https://www.w3schools.com/w3css/4/w3.css}">
+    <link rel="stylesheet" th:href="@{https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css}">
+    <script th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js}"></script>
+    <link rel="stylesheet" th:href="@{https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css}">
+    <script th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js}"></script>
+    <script th:src="@{https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js}"></script>
+    <script th:src="@{https://ajax.aspnetcdn.com/ajax/jquery.validate/1.13.1/jquery.validate.min.js}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" type="text/css" href="/Client.css">
+    <style>
+        body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
+        .myLink {display: none}
+        a{
+            color: grey;
+            text-decoration: none;
+        }
+        .bg-white{
+            background-color: white;
+        }
+        .w3-xlarge {
+            /* font-size: 24px */
+            font-size: 20px!important;
+        }
+        .w3-dropdown-content{
+            top: 46px;
+            right: 0px;
+            font-size: 20px;
+        }
+        .w3-dropdown-hover:first-child, .w3-dropdown-click:hover {
+            background-color: white;
+            color: #000;
+        }
+        .w3-bar .w3-button {
+            text-decoration: none;
+        }
+        .w3-text-teal{
+            color: orangered!important;
+        }
+        .error{
+            color:red;
+            font-size: 14px;
+            font-weight: 100;
+            border-color: red;
+        }
+        #navigationBar{
+
+        }
+    </style>
+    <title>[[${pageTitle}]] - GOGO</title>
+</head>
+<body>
+<!-- Navigation Bar -->
+<div th:fragment="navigationBar" class="w3-bar w3-white w3-border-bottom w3-xlarge" id="navigationBar">
+    <a th:href="@{/}" class="w3-bar-item w3-button w3-text-red w3-hover-red"><b><i class="fa fa-solid fa-location-dot w3-margin-right"></i>GOGO</b></a>
+    <div th:unless="${session.customer}">
+        <a th:href="@{/account}" class="w3-bar-item w3-button w3-text-red w3-hover-red w3-right">Login</a>
+        <a th:href="@{/account/signup}" class="w3-bar-item w3-button w3-text-red w3-hover-red w3-right">Sign up</a>
+    </div>
+    <div th:if="${session.customer}">
+        <div class="w3-bar-item w3-button w3-text-red w3-hover-red w3-right w3-dropdown-hover">
+            <i class="fa fa-user"></i>
+            <div class="w3-dropdown-content w3-bar-block w3-border w3-white  w3-text-red">
+                <a class="w3-bar-item w3-button w3-hover-red bg-white" th:href="@{'/account/information/'+${session.customer.customerID}}">
+                    <p class="w3-serif" th:text="${session.customer.user.getUsername()}"></p>
+                </a>
+                <a class="w3-bar-item w3-button w3-serif w3-hover-red" th:href="@{/account/logout}">Logout</a>
+            </div>
+        </div>
+    </div>
+    <div th:if="${session.flightSelected}">
+        <a th:href="@{/flights}" class="w3-bar-item w3-button w3-text-red w3-hover-red w3-right">Change select</a>
+    </div>
+</div>
+<!-- Header -->
+<header th:fragment="header" class="w3-display-container w3-content w3-hide-small" style="max-width:1500px">
+    <script>
+        function showLoading(){
+
+        }
+        function hideDateReturn(val){
+            if(val == 1)
+                document.getElementById('dateReturn').style.visibility="visible";
+            else if(val == 2)
+                document.getElementById('dateReturn').style.visibility="hidden";
+        }
+    </script>
+    <img class="w3-image" th:src="@{/w3images/london2.jpg}" alt="London" width="1500" height="700">
+    <div class="w3-display-middle" style="width:65%">
+        <div class="w3-bar w3-black">
+            <button class="w3-bar-item w3-button tablink " onclick="openLink(event, 'Flight');"><i class="fa fa-plane w3-margin-right"></i>Flight</button>
+        </div>
+        <!-- Tabs -->
+        <form th:action="@{/flights/search}" method="post">
+            <div id="Flight" class="w3-container w3-white w3-padding-16 ">
+                <div class="w3-row-padding" style="margin:0 -16px;">
+                    <div class="w3-half">
+                        <label>From</label>
+                        <input id="txtFrom" name="txtFrom" class="w3-input w3-border" type="text" placeholder="Departing from" required>
+                    </div>
+                    <div class="w3-half">
+                        <label>To</label>
+                        <input id="txtTo" name="txtTo" class="w3-input w3-border" type="text" placeholder="Arriving at" required>
+                    </div>
+                    <div class="w3-half">
+                        <label>Date of department</label>
+                        <input id="txtDate" name="txtDateMove" class="w3-input w3-border" type="date" required>
+                    </div>
+                    <div id="dateReturn"  class="w3-half">
+                        <label>Date of return</label>
+                        <input id="txtDateReturn" name="txtDateReturn" class="w3-input w3-border" type="date">
+                        <script>
+                            document.getElementById('dateReturn').style.visibility="hidden";
+                        </script>
+                    </div>
+                    <div class="w3-half">
+                        <label>Adults</label>
+                        <input id="slAdults" name="txtAdults" class="w3-input w3-border" type="number" placeholder="0" required max="4" min="0" value="1">
+                    </div>
+                    <div class="w3-half">
+                        <label>Childs</label>
+                        <input id="slChilds" name="txtChilds" class="w3-input w3-border" type="number" placeholder="0" max="2" min="0">
+                    </div>
+                    <div class="w3-half">
+                        <p>
+                            <label>Round-trip</label>
+                            <input id="rdRoundTrip" onclick="hideDateReturn(1)" name="rdCategoryTicket" class="w3-border" type="radio" value="rt" >
+                            <label>One-way</label>
+                            <input id="rdOneWay" onclick="hideDateReturn(2)" name="rdCategoryTicket" class="w3-border" type="radio" value="ow" checked>
+                        </p>
+                    </div>
+                    <div class="w3-half">
+                        <label>Seat class</label>
+                        <select id="slSeatClass" class="w3-border w3-input" name="slSeatClass">
+                            <option value="business">Business</option>
+                            <option value="economy">Economy</option>
+                            <option value="premium economy">Premium Economy</option>
+                        </select>
+                    </div>
+                </div>
+                <p><button type="submit" class="w3-button w3-dark-grey w3-hover-red" onclick="showLoading()">Search and find dates</button></p>
+            </div>
+            <script>
+
+            </script>
+        </form>
+    </div>
+
+    <div th:if="${messageLogin}">
+        <script>
+            Swal.fire({
+                position: 'center',
+                icon: 'success',
+                title: '[[${messageLogin}]]',
+                showConfirmButton: false,
+                timer: 1500
+            })
+        </script>
+    </div>
+</header>
+
+<!-- Footer -->
+<footer th:fragment="footer" class="w3-container w3-center w3-opacity w3-margin-bottom">
+    <h5>Find Us On</h5>
+    <div class="w3-xlarge w3-padding-16">
+        <i class="fa fa-brands fa-facebook-f w3-hover-opacity"></i>
+        <i class="fa fa-brands fa-instagram w3-hover-opacity"></i>
+        <i class="fa fa-brands fa-snapchat w3-hover-opacity"></i>
+        <i class="fa fa-brands fa-pinterest-p w3-hover-opacity"></i>
+        <i class="fa fa-brands fa-twitter w3-hover-opacity"></i>
+        <i class="fa fa-brands fa-linkedin w3-hover-opacity"></i>
+    </div>
+</footer>
+<script>
+    const Swal = require('sweetalert2');
+
+</script>
+<!-- Page loader -->
+<div th:fragment="loader" class="">
+
+</div>
+</body>
+</html>

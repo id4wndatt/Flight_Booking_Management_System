@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{admin/fragmentsAdmin :: admin_head_pageList}"><title></title></head>
+<body>
+<header th:replace="~{admin/fragmentsAdmin :: admin_header}"></header>
+
+<!-- Sidebar/menu -->
+<div th:replace="~{admin/fragmentsAdmin :: admin_menu}"></div>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div th:replace="~{admin/fragmentsAdmin :: admin_overlay}"></div>
+<div class="w3-main" style="margin-left:300px;margin-top:43px;background-color: #f1f1f1">
+    <h1 style="color: #00aba9;">Statistics ticket per order</h1>
+    <div style="width: 500px">
+        <canvas id="myChart" width="400" height="200"></canvas>
+    </div>
+</div>
+<script th:inline="javascript">
+    // Parse data from Thymeleaf model to JavaScript variable
+    const jsonString  = '[[${countOrderOfQuantityTicket}]]';
+    const countOrderOfQuantityTicket = JSON.parse(jsonString);
+
+    const quantityTicketPerOrderArray = [];
+    const quantitySameNumberOfTicketPerOrderArray = [];
+    var total = 0;
+    countOrderOfQuantityTicket.forEach(item => {
+        total += item.quantitySameNumberOfTicketPerOrder;
+    });
+    countOrderOfQuantityTicket.forEach(item => {
+        quantityTicketPerOrderArray.push(item.quantityTicketPerOrder + " ticket per order (" + (item.quantitySameNumberOfTicketPerOrder) + ")");
+        quantitySameNumberOfTicketPerOrderArray.push((item.quantitySameNumberOfTicketPerOrder/total)*100);
+    });
+    var barColors = [
+        "#b91d47",
+        "#00aba9",
+        "#2b5797",
+        "#e8c3b9",
+        "#1e7145",
+        "#b91d74",
+        "#00ab9a",
+        "#2b5779",
+        "#e8c39b",
+        "#1e7154"
+    ];
+    new Chart("myChart", {
+        type: "pie",
+        data: {
+            labels: quantityTicketPerOrderArray,
+            datasets: [{
+                backgroundColor: barColors,
+                data: quantitySameNumberOfTicketPerOrderArray
+            }]
+        },
+        options: {
+            title: {
+                display: true,
+                text: "Statistics quantity of ticket per order."
+            }
+        }
+    });
+</script>
+</body>
+</html>

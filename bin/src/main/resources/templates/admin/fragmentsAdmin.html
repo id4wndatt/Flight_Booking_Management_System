@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<!--    <head th:fragment="admin_head">-->
+<!--        <title>W3.CSS Template</title>-->
+<!--        <meta charset="UTF-8">-->
+<!--        <meta name="viewport" content="width=device-width, initial-scale=1">-->
+<!--        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">-->
+<!--        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">-->
+<!--        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">-->
+<!--        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />-->
+
+<!--        &lt;!&ndash;        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">&ndash;&gt;-->
+<!--&lt;!&ndash;        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>&ndash;&gt;-->
+<!--&lt;!&ndash;        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>&ndash;&gt;-->
+<!--        <style>-->
+<!--            html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}-->
+<!--        </style>-->
+
+<!--        <script>-->
+<!--            function toggleSubMenu(subMenuId) {-->
+<!--                var subMenu = document.getElementById(subMenuId);-->
+<!--                if (subMenu.style.display === "none") {-->
+<!--                    subMenu.style.display = "block";-->
+<!--                } else {-->
+<!--                    subMenu.style.display = "none";-->
+<!--                }-->
+<!--            }-->
+<!--        </script>-->
+
+<!--    </head>-->
+
+    <head th:fragment="admin_head_pageList">
+        <title>GOGO Admin</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" type="text/css" th:href="@{/library/w3.css}">
+        <script th:src="@{/library/jquery.min.js}"></script>
+        <link rel="stylesheet" th:href="@{/library/fonts.googleapis.com_css_family=Raleway.css}">
+        <link rel="stylesheet" th:href="@{/library/bootstrap.min.css}">
+        <script th:src="@{/library/js_bootstrap.min.js}"></script>
+        <script th:src="@{/library/npm_chart.js}"></script>
+<!--        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>-->
+<!--        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">-->
+<!--        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">-->
+<!--        <script rel="stylesheet" th:href="@{/library/js_bootstrap.min.js}"></script>-->
+<!--        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>-->
+<!--        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>-->
+<!--        <link rel="stylesheet" type="text/css" th:href="@{/library/font-awesome_6.4.2_css_all.min.css}">-->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <style>
+            html,body,h1,h2,h3,h4,h5 {font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;}
+            .w3-button:hover {
+                background-color: #7a7a7a;!important;
+            }
+        </style>
+
+        <script>
+            function toggleSubMenu(subMenuId) {
+                var subMenu = document.getElementById(subMenuId);
+                if (subMenu.style.display === "none") {
+                    subMenu.style.display = "block";
+                } else {
+                    subMenu.style.display = "none";
+                }
+            }
+        </script>
+    </head>
+    <!-- header   -->
+    <body>
+        <div th:fragment="admin_header" class="w3-bar w3-top w3-black w3-large" style="z-index:4">
+            <button class="w3-bar-item w3-button w3-hide-large w3-hover-none w3-hover-text-light-grey" onclick="w3_open();"><i class="fa fa-bars"></i>  Menu</button>
+            <span class="w3-bar-item w3-right"><i class="fa fa-solid fa-location-dot w3-margin-right"></i>GOGO</span>
+        </div>
+
+        <!-- Menu   -->
+        <nav th:fragment="admin_menu" class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>
+            <div class="w3-container w3-row">
+                <div class="w3-col s4">
+                    <img src="/w3images/user.jpg" class="w3-circle w3-margin-right" style="width:46px">
+                </div>
+                <div class="w3-col s8 w3-bar">
+                    <span>Welcome, <strong th:text="${session.username}"></strong></span><br>
+                    <a href="#" class="w3-bar-item w3-button"><i class="fa fa-envelope" style="color: #23527C"></i></a>
+                    <a href="#" class="w3-bar-item w3-button"><i class="fa fa-user" style="color: #23527C"></i></a>
+                    <a th:href="@{/logout}" class="w3-bar-item w3-button"><i class="fa fa-sign-out" style="color: #23527C"></i></a>
+                </div>
+            </div>
+            <hr>
+            <a th:href="@{/admin}" style="text-decoration: none; font-size: 24px;">
+                <h2>Home Admin</h2>
+            </a>
+            <div class="w3-bar-block">
+                <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
+                <a th:href="@{/admin/listPlane}" class="w3-bar-item w3-button w3-padding"><i class="fa fa-plane fa-fw"></i>  Plane</a>
+                <a th:href="@{/admin/airlineCompanies}" class="w3-bar-item w3-button w3-padding"><i class="fa fa-building fa-fw"></i>  Airline Company</a>
+                <a th:href="@{/admin/flightList}" class="w3-bar-item w3-button w3-padding"><i class="fa fa-fighter-jet fa-fw"></i>  Flight</a>
+                <a th:href="@{/admin/ticketList}" class="w3-bar-item w3-button w3-padding"><i class="fa fa-ticket fa-fw"></i>  Ticket</a>
+<!--                <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-first-order fa-fw"></i>  Orders</a>-->
+                <a th:href="@{/admin/seatCategoryList}" class="w3-bar-item w3-button w3-padding"><i class="fa fa-circle fa-fw"></i>  Seat category</a>
+                <a th:href="@{/admin/userList}" class="w3-bar-item w3-button w3-padding"><i class="fa fa-users fa-fw"></i>  User</a>
+                <!-- New Statistics menu item -->
+                <div class="w3-dropdown-click">
+                    <button class="w3-button w3-padding" onclick="toggleSubMenu('statisticsSubMenu')">
+                        <i class="fa fa-chart-bar fa-fw"></i> Statistics
+                        <i class="fas fa-sort-down"></i>
+                    </button>
+                    <div id="statisticsSubMenu" class="w3-dropdown-content w3-bar-block w3-card-4" style="display: none;">
+                        <a th:href="@{/admin/statistics/ticketByQuarter}" class="w3-bar-item w3-button w3-padding" style="background-color: #e1e0e0; text-decoration: none;">
+                            <i class="fa fa-chart-line fa-fw"></i>
+                            Ticket Statistics By Quarters
+                        </a>
+                        <a th:href="@{/admin/statistics/ticketPerOrder}" class="w3-bar-item w3-button w3-padding" style="background-color: #e1e0e0; text-decoration: none;">
+                            <i class="fa fa-chart-pie fa-fw"></i>
+                            Statistics ticket per order
+                        </a>
+                        <a th:href="@{/admin/statistics/ticketByMonth}" class="w3-bar-item w3-button w3-padding" style="background-color: #e1e0e0; text-decoration: none;">
+                            <i class="fa fa-chart-bar fa-fw"></i>
+                            Ticket Statistics By Month
+                        </a>
+                        <a th:href="@{/admin/statistics/incomeByMonth}" class="w3-bar-item w3-button w3-padding" style="background-color: #e1e0e0; text-decoration: none;">
+                            <i class="fa fa-chart-simple fa-fw"></i>
+                            Income Statistics
+                        </a>
+                        <a th:href="@{/admin/statistics/incomeByQuarter}" class="w3-bar-item w3-button w3-padding" style="background-color: #e1e0e0; text-decoration: none;">
+                            <i class="fa fa-chart-column fa-fw"></i>
+                            Ticket Statistics By Quarters
+                        </a>
+                        <!-- Add more statistics sub-items as needed -->
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Overlay effect when opening sidebar on small screens -->
+        <div th:fragment="admin_overlay" class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+
+        <th th:fragment="column_link(fieldName, columnLabel, entityURL)">
+            <a class="text-white"
+               th:href="@{'/admin/'+${entityURL}+'/page/' + ${currentPage} + '?sortField=' + ${fieldName} + '&sortDir=' + ${sortField != fieldName ? sortDir : reverseSortDir} + ${keyword != null ? '&keyword=' + keyword : ''}}">
+                [[${columnLabel}]]
+            </a>
+            <span th:if="${sortField == fieldName}"
+                  th:class="${sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}">
+            </span>
+        </th>
+
+        <a th:fragment="page_link(moduleURL, pageNum, label)"
+           class="page-link"
+           th:href="@{'/admin/' + ${moduleURL} + '/page/' + ${pageNum} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} + ${keyword != null ? '&keyword=' + keyword : ''}}">
+            [[${label}]]
+        </a>
+        <div th:fragment="pagination(moduleURL, entityName)" th:remove="tag">
+            <div class="text-center m-1" th:if="${totalItems > 0}">
+                <span>Showing [[${entityName}]] # [[${startCount}]] to [[${endCount}]] of [[${totalItems}]]</span>
+            </div>
+            <div class="text-center m-1" th:unless="${totalItems > 0}">
+                <span>No [[${entityName}]] found</span>
+            </div>
+
+
+            <div th:if="${totalPages > 1}">
+                <nav>
+                    <ul class="pagination justify-content-center">
+                        <li th:class="${currentPage > 1 ? 'page-item': 'page-item disabled'}">
+                            <a th:replace="~{admin/fragmentsAdmin :: page_link(${moduleURL}, 1, 'First')}"></a>
+                        </li>
+                        <li th:class="${currentPage > 1 ? 'page-item': 'page-item disabled'}">
+                            <a th:replace="~{admin/fragmentsAdmin :: page_link(${moduleURL}, ${currentPage - 1}, 'Previous')}"></a>
+                        </li>
+                        <li th:if="${totalPages <= 6}"
+                            th:class="${currentPage != i ? 'page-item': 'page-item active'}"
+                            th:each="i : ${#numbers.sequence(1, totalPages)}">
+
+                            <a th:replace="~{admin/fragmentsAdmin :: page_link(${moduleURL}, ${i}, ${i})}"></a>
+
+                        </li>
+                        <th:block th:if="${totalPages >= 7}">
+                            <li th:if="${currentPage <= 2}" th:class="${currentPage != i ? 'page-item': 'page-item active'}"
+                                th:each="i : ${#numbers.sequence(1, currentPage + 2)}">
+
+                                <a th:replace="~{admin/fragmentsAdmin :: page_link(${moduleURL}, ${i}, ${i})}"></a>
+                            </li>
+                            <li th:if="${currentPage >= 3 && currentPage <= totalPages - 2}" th:class="${currentPage != i ? 'page-item': 'page-item active'}"
+                                th:each="i : ${#numbers.sequence(currentPage - 2, currentPage + 2)}">
+
+                                <a th:replace="~{admin/fragmentsAdmin :: page_link(${moduleURL}, ${i}, ${i})}"></a>
+                            </li>
+                            <li th:if="${currentPage > totalPages - 2}" th:class="${currentPage != i ? 'page-item': 'page-item active'}"
+                                th:each="i : ${#numbers.sequence(currentPage - 2, totalPages)}">
+
+                                <a th:replace="~{admin/fragmentsAdmin :: page_link(${moduleURL}, ${i}, ${i})}"></a>
+                            </li>
+                        </th:block>
+                        <li th:if="${currentPage <= totalPages - 2}" >
+                            <a>...</a>
+                        </li>
+                        <li th:class="${currentPage < totalPages ? 'page-item': 'page-item disabled'}">
+                            <a th:replace="~{admin/fragmentsAdmin :: page_link(${moduleURL}, ${currentPage + 1}, 'Next')}"></a>
+                        </li>
+                        <li th:class="${currentPage < totalPages ? 'page-item': 'page-item disabled'}">
+                            <a th:replace="~{admin/fragmentsAdmin :: page_link(${moduleURL}, ${totalPages}, 'Last')}"></a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </body>
+</html>

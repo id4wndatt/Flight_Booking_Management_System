@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" th:href="@{https://www.w3schools.com/w3css/4/w3.css}">
+    <link rel="stylesheet" th:href="@{https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css}">
+    <title>pdf</title>
+</head>
+<body>
+
+<p><b>Passenger's name: </b><span th:text="${order.getCustomer().getFullname()}"></span></p>
+<div class="w3-border-grey">
+    <table class="w3-table w3-striped" style="border: none;text-align: left;width: 100%;">
+        <tr>
+            <td><b>MÃ ĐẶT CHỖ</b></td>
+            <td><span th:text="${order.getQrCode()}"></span></td>
+        </tr>
+        <tr>
+            <td><b>NGÀY XUẤT VÉ</b></td>
+            <td><span th:text="${order.getDate()}"></span></td>
+        </tr>
+        <tr>
+            <td><b>TỔNG SỐ TIỀN</b></td>
+            <td><span th:text="${order.getTotal_cost()}"></span></td>
+        </tr>
+        <tr>
+            <td><b>NƠI XUẤT HÓA ĐƠN</b></td>
+            <td>GOGO</td>
+        </tr>
+    </table>
+    <h5>THÔNG TIN VÉ</h5>
+    <th:block th:each="ticket : ${tickets}">
+        <div class="">
+            <table class="w3-table-all" style="text-align: center;width: 100%;">
+                <tr>
+                    <th>NGÀY ĐI</th>
+                    <th>HÃNG HÀNG KHÔNG</th>
+                    <th>KHỞI HÀNH</th>
+                    <th>ĐẾN</th>
+                </tr>
+                <tr>
+                    <td><span th:text="${ticket.getFlight().getDate_flight()}"></span> </td>
+                    <td><span th:text="${ticket.getSeat().getPlane().getAirlineCompany().getAirline_name()}"></span></td>
+                    <td><span th:text="${ticket.getFlight().getDeparting_from()}"></span> - <span th:text="${ticket.getFlight().getFlight_time()}"></span></td>
+                    <td><span th:text="${ticket.getFlight().getArriving_at()}"></span> - <span th:text="${ticket.getFlight().getDeparture_time()}"></span></td>
+                </tr>
+            </table>
+        </div>
+    </th:block>
+</div>
+</body>
+</html>

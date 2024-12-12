@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head th:replace="~{fragments::html_head}"/>
+<body class="w3-light-grey">
+
+<!-- Navigation Bar -->
+<div th:replace="~{fragments:: navigationBar}"/>
+<!-- Header -->
+<header th:replace="~{fragments::header}"/>
+<div class="w3-content" style="max-width:1500px;">
+    <style>
+        .flex{
+            display: flex;
+        }
+        .flex1{
+            width: 30%;
+        }
+        .flex2-row{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .flex2{
+            width:50%;
+        }
+        .flex3{
+            width:20%;
+        }
+        .show-detail{
+            position: absolute;
+            width: 350px;
+            height: 170px;
+            padding: 10px;
+            z-index: 100;
+        }
+    </style>
+    <div th:if="${error}">
+        <script>
+            Swal.fire({
+                position: 'center',
+                icon: 'error',
+                title: '[[${error}]]',
+                showConfirmButton: false,
+                timer: 1500
+            })
+        </script>
+    </div>
+    <div th:unless="${error}">
+        <script>
+            Swal.fire({
+                title: 'Please wait...',
+                allowEscapeKey: false,
+                allowOutsideClick: false,
+                timer: 1000,
+                didOpen: () => {
+                    Swal.showLoading()
+                }
+            });
+        </script>
+    </div>
+
+    <div class="w3-panel w3-topbar w3-bottombar w3-border-red w3-pale-red" th:if="${session.flightSelected}">
+        <h2 class="w3-center">Your flights</h2>
+        <div class="w3-row-padding">
+            <h5 class=""><a th:href="@{/flights/fillInfor}" class="w3-button w3-green w3-text-white w3-card" style="text-decoration: none">Next →</a></h5>
+            <h5 class=""><a th:href="@{/flights/delSelected}" class="w3-button w3-amber w3-text-white w3-card" style="text-decoration: none">Delete all</a></h5>
+            <th:block th:each = "fs : ${session.flightSelected}">
+                <th:block th:each = "plane : ${fs.getFlight().getPlanes()}">
+                    <div class="w3-half w3-margin-bottom">
+                        <div class="flex w3-container w3-white w3-card">
+                            <div class="flex1">
+                                <img style="width: 110px;" th:src="@{'/airlineCompanies/' + ${plane.getAirlineCompany().getAirline_image()}}" alt="Bamboo Airways">
+                                <h4><span th:text="${plane.getAirlineCompany().getAirline_name()}"></span></h4>
+                                <div class="w3-dropdown-click w3-display-container">
+                                    <button class="w3-button w3-hover-none w3-text-blue">Flight details <i class="fa fa-solid fa-caret-down"></i></button>
+                                    <div class="w3-card w3-animate-opacity w3-display-hover show-detail w3-white">
+                                        <p>Aircraft :<span class="w3-text-blue" th:text="${plane.getPlane_name()}"></span> Operated by <span th:text="${plane.getAirlineCompany().getAirline_name()}"></span></p>
+                                        <p>Travel time :<span th:text="${fs.getFlight().getTravel_time()}"></span></p>
+                                        <p>Departing at <span th:text="${fs.getFlight().getDate_flight()}"></span> (<span class="w3-text-blue" th:text="${fs.getFlight().getDeparting_from()}"></span > <i class="fa fa-thin fa-arrow-right" style="margin: 0 10px 0 10px;"></i> <span class="w3-text-blue" th:text="${fs.getFlight().getArriving_at()}"></span>)</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex2">
+                                <div class="flex2-row" style="height:40%;">
+                                    <i class="fa fa-solid fa-plane"></i>
+                                </div>
+                                <div class="flex2-row" style="height:15%;">
+                                    <span th:text="${fs.getFlight().getFlight_time()}"></span> <span style="margin: 0 10px 0 10px;">→</span> <span th:text="${fs.getFlight().getDeparture_time()}"></span>
+                                </div>
+                                <div class="flex2-row" style="height:15%;">
+                                    <span>Bay thẳng</span>
+                                </div>
+                                <div class="flex2-row" style="height:30%">
+                                    (<span th:text="${fs.getFlight().getDeparting_from()}"></span ><i class="fa fa-solid fa-arrow-right" style="margin: 0 10px 0 10px;"></i><span th:text="${fs.getFlight().getArriving_at()}"></span>)
+                                </div>
+                            </div>
+                            <div class="flex3 w3-display-container">
+                                <div class="w3-text-red" style="height: 75%;display: flex;justify-content: center;align-items: center;font-size: 17px;"><span th:text="${fs.getFlight().getFee_flight()}"></span> VND</div>
+                                <a th:href="@{'/flights/delFlight/' + ${fs.getFlight().getFlightID()}}" class="w3-text-blue w3-display-bottommiddle" style="margin-bottom: 15px;">Delete</a>
+                            </div>
+                        </div>
+                    </div>
+                </th:block>
+            </th:block>
+        </div>
+    </div>
+    <hr>
+    <div th:unless="${session.flights}">
+        <div th:unless="${session.categoryTicket}">
+            <h1 class="w3-center">Have no flight can be found</h1>
+        </div>
+    </div>
+    <div th:if="${session.categoryTicket}">
+        <th:block th:each = "flight : ${session.flights1}">
+            <div class="w3-container w3-margin-bottom">
+                <h3 class="w3-center"><span th:text="${flight.getDeparting_from()}"></span><i class="fa fa-thin fa-arrow-right" style="margin: 0 10px 0 10px;"></i><span th:text="${flight.getArriving_at()}"></span></h3>
+                <p class="w3-center"><span th:text="${flight.getDate_flight()}"></span>  |  <span th:text="${session.adults} + ${session.child}"></span> hành khách  |  <span th:text="${session.seatClass.categoryName}"></span></p>
+            </div>
+        </th:block>
+        <div class="w3-row-padding">
+            <th:block th:each = "flight : ${session.flights1}">
+                <th:block th:each = "plane : ${flight.getPlanes()}">
+                    <div class="w3-half w3-margin-bottom">
+                        <div class="flex w3-container w3-white w3-card">
+                            <div class="flex1">
+                                <img style="width: 110px;" th:src="@{'/airlineCompanies/' + ${plane.getAirlineCompany().getAirline_image()}}" alt="Bamboo Airways">
+                                <h4><span th:text="${plane.getAirlineCompany().getAirline_name()}"></span></h4>
+                                <div class="w3-dropdown-click w3-display-container">
+                                    <button class="w3-button w3-hover-none w3-text-blue">Flight details <i class="fa fa-solid fa-caret-down"></i></button>
+                                    <div class="w3-card w3-animate-opacity w3-display-hover show-detail w3-white">
+                                        <p>Aircraft :<span class="w3-text-blue" th:text="${plane.getPlane_name()}"></span> Operated by <span th:text="${plane.getAirlineCompany().getAirline_name()}"></span></p>
+                                        <p>Travel time :<span th:text="${flight.getTravel_time()}"></span></p>
+                                        <p>Departing at <span th:text="${flight.getDate_flight()}"></span> (<span class="w3-text-blue" th:text="${flight.getDeparting_from()}"></span > <i class="fa fa-thin fa-arrow-right" style="margin: 0 10px 0 10px;"></i> <span class="w3-text-blue" th:text="${flight.getArriving_at()}"></span>)</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex2">
+                                <div class="flex2-row" style="height:40%;">
+                                    <i class="fa fa-solid fa-plane"></i>
+                                </div>
+                                <div class="flex2-row" style="height:15%;">
+                                    <span th:text="${flight.getFlight_time()}"></span> <span style="margin: 0 10px 0 10px;">→</span> <span th:text="${flight.getDeparture_time()}"></span>
+                                </div>
+                                <div class="flex2-row" style="height:15%;">
+                                    <span>Bay thẳng</span>
+                                </div>
+                                <div class="flex2-row" style="height:30%">
+                                    (<span th:text="${flight.getDeparting_from()}"></span ><i class="fa fa-solid fa-arrow-right" style="margin: 0 10px 0 10px;"></i><span th:text="${flight.getArriving_at()}"></span>)
+                                </div>
+                            </div>
+                            <div class="flex3 w3-display-container">
+                                <div class="w3-text-red" style="height: 75%;display: flex;justify-content: center;align-items: center;font-size: 17px;"><span th:text="${flight.getFee_flight()}"></span> VND</div>
+                                <a th:href="'/flights/takeFlight/'+${flight.getFlightID()}+'&'+${plane.getPlaneID()}" class="w3-button w3-red w3-display-bottommiddle" style="margin-bottom: 10px;">Select</a>
+                            </div>
+                        </div>
+                    </div>
+                </th:block>
+            </th:block>
+        </div>
+        <th:block th:each = "flight : ${session.flights2}">
+            <div class="w3-container w3-margin-bottom">
+                <h3 class="w3-center"><span th:text="${flight.getDeparting_from()}"></span><i class="fa fa-thin fa-arrow-right" style="margin: 0 10px 0 10px;"></i><span th:text="${flight.getArriving_at()}"></span></h3>
+                <p class="w3-center"><span th:text="${flight.getDate_flight()}"></span>  |  <span th:text="${session.adults} + ${session.child}"></span> hành khách  |  <span th:text="${session.seatClass.categoryName}"></span></p>
+            </div>
+        </th:block>
+        <div class="w3-row-padding">
+            <th:block th:each = "flight : ${session.flights2}">
+                <th:block th:each = "plane : ${flight.getPlanes()}">
+                    <div class="w3-half w3-margin-bottom">
+                        <div class="flex w3-container w3-white w3-card">
+                            <div class="flex1">
+                                <img style="width: 110px;" th:src="@{'/airlineCompanies/' + ${plane.getAirlineCompany().getAirline_image()}}" alt="Bamboo Airways">
+                                <h4><span th:text="${plane.getAirlineCompany().getAirline_name()}"></span></h4>
+                                <div class="w3-dropdown-click w3-display-container">
+                                    <button class="w3-button w3-hover-none w3-text-blue">Flight details <i class="fa fa-solid fa-caret-down"></i></button>
+                                    <div class="w3-card w3-animate-opacity w3-display-hover show-detail w3-white">
+                                        <p>Aircraft :<span class="w3-text-blue" th:text="${plane.getPlane_name()}"></span> Operated by <span th:text="${plane.getAirlineCompany().getAirline_name()}"></span></p>
+                                        <p>Travel time :<span th:text="${flight.getTravel_time()}"></span></p>
+                                        <p>Departing at <span th:text="${flight.getDate_flight()}"></span> (<span class="w3-text-blue" th:text="${flight.getDeparting_from()}"></span > <i class="fa fa-thin fa-arrow-right" style="margin: 0 10px 0 10px;"></i> <span class="w3-text-blue" th:text="${flight.getArriving_at()}"></span>)</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex2">
+                                <div class="flex2-row" style="height:40%;">
+                                    <i class="fa fa-solid fa-plane"></i>
+                                </div>
+                                <div class="flex2-row" style="height:15%;">
+                                    <span th:text="${flight.getFlight_time()}"></span> <span style="margin: 0 10px 0 10px;">→</span> <span th:text="${flight.getDeparture_time()}"></span>
+                                </div>
+                                <div class="flex2-row" style="height:15%;">
+                                    <span>Bay thẳng</span>
+                                </div>
+                                <div class="flex2-row" style="height:30%">
+                                    (<span th:text="${flight.getDeparting_from()}"></span ><i class="fa fa-solid fa-arrow-right" style="margin: 0 10px 0 10px;"></i><span th:text="${flight.getArriving_at()}"></span>)
+                                </div>
+                            </div>
+                            <div class="flex3 w3-display-container">
+                                <div class="w3-text-red" style="height: 75%;display: flex;justify-content: center;align-items: center;font-size: 17px;"><span th:text="${flight.getFee_flight()}"></span> VND</div>
+                                <a th:href="'/flights/takeFlight/'+${flight.getFlightID()}+'&'+${plane.getPlaneID()}" class="w3-button w3-red w3-display-bottommiddle" style="margin-bottom: 10px;">Select</a>
+                            </div>
+                        </div>
+                    </div>
+                </th:block>
+            </th:block>
+        </div>
+    </div>
+    <th:block th:each = "flight : ${session.flights}">
+        <div class="w3-container w3-margin-bottom">
+            <h3 class="w3-center"><span th:text="${flight.getDeparting_from()}"></span><i class="fa fa-thin fa-arrow-right" style="margin: 0 10px 0 10px;"></i><span th:text="${flight.getArriving_at()}"></span></h3>
+            <p class="w3-center"><span th:text="${flight.getDate_flight()}"></span>  |  <span th:text="${session.adults} + ${session.child}"></span> hành khách  |  <span th:text="${session.seatClass.categoryName}"></span></p>
+        </div>
+    </th:block>
+    <div class="w3-row-padding">
+        <th:block th:each = "flight : ${session.flights}">
+            <th:block th:each = "plane : ${flight.getPlanes()}">
+                <div class="w3-half w3-margin-bottom">
+                    <div class="flex w3-container w3-white w3-card">
+                        <div class="flex1">
+                            <img style="width: 110px;" th:src="@{'/airlineCompanies/' + ${plane.getAirlineCompany().getAirline_image()}}" alt="Bamboo Airways">
+                            <h4><span th:text="${plane.getAirlineCompany().getAirline_name()}"></span></h4>
+                            <div class="w3-dropdown-click w3-display-container">
+                                <button class="w3-button w3-hover-none w3-text-blue">Flight details <i class="fa fa-solid fa-caret-down"></i></button>
+                                <div class="w3-card w3-animate-opacity w3-display-hover show-detail w3-white">
+                                    <p>Aircraft :<span class="w3-text-blue" th:text="${plane.getPlane_name()}"></span> Operated by <span th:text="${plane.getAirlineCompany().getAirline_name()}"></span></p>
+                                    <p>Travel time :<span th:text="${flight.getTravel_time()}"></span></p>
+                                    <p>Departing at <span th:text="${flight.getDate_flight()}"></span> (<span class="w3-text-blue" th:text="${flight.getDeparting_from()}"></span > <i class="fa fa-thin fa-arrow-right" style="margin: 0 10px 0 10px;"></i> <span class="w3-text-blue" th:text="${flight.getArriving_at()}"></span>)</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex2">
+                            <div class="flex2-row" style="height:40%;">
+                                <i class="fa fa-solid fa-plane"></i>
+                            </div>
+                            <div class="flex2-row" style="height:15%;">
+                                <span th:text="${flight.getFlight_time()}"></span> <span style="margin: 0 10px 0 10px;">→</span> <span th:text="${flight.getDeparture_time()}"></span>
+                            </div>
+                            <div class="flex2-row" style="height:15%;">
+                                <span>Bay thẳng</span>
+                            </div>
+                            <div class="flex2-row" style="height:30%">
+                                (<span th:text="${flight.getDeparting_from()}"></span ><i class="fa fa-solid fa-arrow-right" style="margin: 0 10px 0 10px;"></i><span th:text="${flight.getArriving_at()}"></span>)
+                            </div>
+                        </div>
+                        <div class="flex3 w3-display-container">
+                            <div class="w3-text-red" style="height: 75%;display: flex;justify-content: center;align-items: center;font-size: 17px;"><span th:text="${flight.getFee_flight()}"></span> VND</div>
+                            <a th:href="'/flights/takeFlight/'+${flight.getFlightID()}+'&'+${plane.getPlaneID()}" class="w3-button w3-red w3-display-bottommiddle" style="margin-bottom: 10px;">Select</a>
+                        </div>
+                    </div>
+                </div>
+            </th:block>
+        </th:block>
+    </div>
+</div>
+<button style="" class="w3-text-dark-grey" id="btn-scroll" onclick="ontop()"><i class='fa fa-angle-double-up'></i></button>
+<script>
+    function ontop(){
+        document.documentElement.scrollTop = 0;
+    }
+    $(document).ready(function (){
+        window.scroll(0,1080);
+    })
+</script>
+<!-- Footer -->
+<footer th:replace="~{fragments::footer}"/>
+</body>
+</html>

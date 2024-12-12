@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head th:replace="~{fragments::html_head}"/>
+<body class="w3-light-grey">
+    <!-- Navigation Bar -->
+    <div th:replace="~{fragments:: navigationBar}"/>
+
+    <!-- Page Container -->
+    <div  class="w3-content w3-margin-top" style="max-width:1400px;" th:if="${customer}">
+        <div th:if="${message}">
+            <script>
+                Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: '[[${message}]]',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            </script>
+        </div>
+        <!-- The Grid -->
+        <div class="w3-row-padding">
+
+            <!-- Left Column -->
+            <div class="w3-third">
+
+                <div class="w3-white w3-text-grey w3-card-4">
+                    <div class="w3-display-container">
+                            <img src="/w3images/avata1.jpg" style="width:100%" alt="Avatar">
+                        <div class="w3-display-bottomleft w3-container w3-text-black">
+                            <h2 th:text="${session.customer.fullname}"></h2>
+                        </div>
+                    </div>
+                    <div class="w3-container">
+                        <ul class="nav nav-pills nav-stacked">
+                            <li><a th:href="@{'/account/information/'+${session.customer.customerID}}">Tài khoản</a></li>
+                            <li><a href="#">Mật khẩu & Bảo mật</a></li>
+                            <li><a th:href="@{/account/logout}">Đăng xuất</a></li>
+                        </ul>
+                        <hr>
+                    </div>
+                </div><br>
+
+                <!-- End Left Column -->
+            </div>
+
+            <!-- Right Column -->
+            <div class="w3-twothird">
+
+                <div class="w3-container w3-card w3-white w3-margin-bottom">
+                    <h3 class="w3-text-grey w3-padding-16"><i class="fa fa-user fa-fw w3-margin-right w3-text-teal"></i>Thông tin</h3>
+                        <form id="form_info" name="form_info" th:action="@{/account/updateInfo}" method="post" th:object="${customer}">
+                            <input th:field="*{customerID}" name="customerID" type="hidden" th:value="${customer.customerID}">
+                            <div class="w3-container">
+                                <h5 class="w3-opacity"><b>Họ tên *</b></h5>
+                                <input th:field="*{fullname}" class="w3-input" type="text" name="fullname" th:value="${customer.fullname}">
+                            </div>
+                            <div class="w3-container w3-third">
+                                <h5 class="w3-opacity"><b>Giới tính</b></h5>
+                                <input th:field="*{sex}" class="w3-input" type="text" name="sex" th:value="${customer.sex}">
+                            </div>
+                            <div class="w3-container w3-twothird">
+                                <h5 class="w3-opacity"><b>Ngày sinh</b></h5>
+                                <input th:field="*{birthday}" class="w3-input" type="date" name="birthday" th:value="${customer.birthday}">
+                            </div>
+                            <div class="w3-container">
+                                <h5 class="w3-opacity"><b>Địa chỉ</b></h5>
+                                <input th:field="*{address}" class="w3-input" type="text" name="address" th:value="${customer.address}">
+                            </div>
+                            <div class="w3-container w3-twothird">
+                                <h5 class="w3-opacity"><b>Căn cước công dân *</b></h5>
+                                <input th:field="*{citizenIdentification}" class="w3-input" type="text" name="citizen_identification" id="cccd" th:value="${customer.citizenIdentification}" required>
+                            </div>
+                            <div class="w3-container w3-third">
+                                <h5 class="w3-opacity"><b>Quốc gia *</b></h5>
+                                <input th:field="*{nationality}" class="w3-input" type="text" name="nationality" th:value="${customer.nationality}" required>
+                            </div>
+                            <div class="w3-container">
+                                <h3 class="w3-text-grey w3-padding-16"><i class="fa fa-envelope fa-fw w3-margin-right w3-text-teal"></i>Email</h3>
+                                <input th:field="*{email}" class="w3-input" type="text" name="email" th:value="${customer.email}" required>
+                            </div>
+                            <hr>
+                            <div class="w3-container">
+                                <h3 class="w3-text-grey w3-padding-16"><i class="fa fa-phone fa-fw w3-margin-right w3-text-teal"></i>SDT *</h3>
+                                <input th:field="*{phone}" class="w3-input" type="text" name="phone" th:value="${customer.phone}" required>
+                            </div>
+                            <p></p>
+                            <div class="w3-container w3-pad">
+                                <input class="w3-button w3-red w3-round w3-right" type="submit" id="btnInfor" value="Save">
+                            </div>
+                            <hr>
+                        </form>
+                    <script>
+                        $(document).ready(function (){
+                            $.validator.addMethod("emailRule",function (value,element,args) {
+                                return /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$/.test(value);
+                            },'Email này không hợp lệ!');
+                            $.validator.addMethod("noWhiteSpace",function (value,element,args) {
+                                return /^\S+$/.test(value);
+                            },'Vui lòng không có khoảng trắng!');
+                            $("#form_info").validate({
+                                rules:{
+                                    fullname:{
+                                      required:true,
+                                      minlength:1
+                                    },
+                                    citizen_identification:{
+                                        required:true,
+                                        minlength:12,
+                                        noWhiteSpace:true
+                                    },
+                                    phone:{
+                                        required:true,
+                                        maxLength:10,
+                                        noWhiteSpace:true
+                                    },
+                                    nationality:{
+                                        required:true,
+                                    },
+                                    email:{
+                                        required:true,
+                                        emailRule:true,
+                                        noWhiteSpace:true
+                                    }
+                                },
+                                messages:{
+                                    citizen_identification:{
+                                        required:"Vui lòng nhập giấy tờ tùy thân công dân của bạn!",
+                                        minlength:"Vui lòng nhập ít nhất 12 ký tự"
+                                    },
+                                    phone:{
+                                        required:"Vui lòng nhập số điện thoại của bạn!",
+                                    },
+                                    nationality:{
+                                        required:"Vui lòng nhập quốc tịch của bạn!",
+                                    },
+                                    email:{
+                                        required:"Vui lòng nhập email của bạn!"
+                                    }
+                                }
+                            });
+                        });
+                    </script>
+                </div>
+
+
+                <!-- End Right Column -->
+            </div>
+
+            <!-- End Grid -->
+        </div>
+
+        <!-- End Page Container -->
+    </div>
+    <footer th:replace="~{fragments::footer}" />
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head th:replace="~{admin/fragmentsAdmin :: admin_head_pageList}"/>
+<body>
+<style>
+    .update {
+        background-color: #1c98ea;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+        width: 50%;
+        border: 1px solid #000;
+    }
+    .form-delete {
+        width: 50%;
+    }
+    .delete:hover {
+        background-color: #8c0505;
+    }
+    .delete {
+        background-color: red;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+        width: 100%;
+        border: 1px solid #000;
+        border-left: none;
+    }
+
+    .update:hover {
+        background-color: #0e4870;
+    }
+</style>
+
+<!-- Top container -->
+<header th:replace="~{admin/fragmentsAdmin :: admin_header}"/>
+
+<!-- Sidebar/menu -->
+<div th:replace="~{admin/fragmentsAdmin :: admin_menu}"></div>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div th:replace="~{admin/fragmentsAdmin :: admin_overlay}"></div>
+
+<!-- !PAGE CONTENT! -->
+<div class="w3-main" style="margin-left:300px;margin-top:43px;background-color: #f1f1f1">
+
+    <h1 style="font-weight: bold; font-size: 25px; padding: 25px 15px">Danh sách vé chuyến bay</h1>
+
+
+    <table class="table">
+        <thead>
+        <tr>
+<!--            <th><a th:href="@{'/admin/ticketList/page/' + ${currentPage} + '?sortBy=ticketId'}">ticketID</a></th>-->
+<!--            <th><a th:href="@{'/admin/ticketList/page/' + ${currentPage} + '?sortBy=airfares'}">airfares</a></th>-->
+<!--            <th><a th:href="@{'/admin/ticketList/page/' + ${currentPage} + '?sortBy=luggage.weight'}">weight</a></th>-->
+<!--            <th><a th:href="@{'/admin/ticketList/page/' + ${currentPage} + '?sortBy=planeFlight.flight.departingForm'}">flight router</a></th>-->
+<!--            <th><a th:href="@{'/admin/ticketList/page/' + ${currentPage} + '?sortBy=order.date'}">date</a></th>-->
+<!--            <th><a th:href="@{'/admin/ticketList/page/' + ${currentPage} + '?sortBy=customer.fullName'}">customer name</a></th>-->
+            <th th:replace="~{admin/fragmentsAdmin :: column_link('ticketID', 'ticket ID', 'ticketList')}"></th>
+            <th th:replace="~{admin/fragmentsAdmin :: column_link('airfares', 'airfares', 'ticketList')}"></th>
+            <th th:replace="~{admin/fragmentsAdmin :: column_link('luggage.weight', 'weight', 'ticketList')}"></th>
+            <th th:replace="~{admin/fragmentsAdmin :: column_link('flight.departingForm', 'flight router', 'ticketList')}"></th>
+            <th th:replace="~{admin/fragmentsAdmin :: column_link('sortBy=order.date', 'date', 'ticketList')}"></th>
+            <th th:replace="~{admin/fragmentsAdmin :: column_link('customer.fullName', 'customer name', 'ticketList')}"></th>
+
+<!--            <th>action</th>-->
+        </tr>
+        </thead>
+        <tbody>
+        <th:block th:each="ticket : ${tickets}">
+            <tr>
+                <td th:utext="${ticket.getTicketID()}">..</td>
+                <td th:utext="${ticket.getAirfares()}">..</td>
+                <td th:utext="${ticket.getLuggage().getWeight()}">..</td>
+                <td th:utext="${ticket.getFlight().getFlightRouter()}">..</td>
+                <td th:utext="${ticket.getOrder().getDate()}">..</td>
+                <td th:utext="${ticket.getCustomer().getFullname()}">..</td>
+            </tr>
+        </th:block>
+        </tbody>
+    </table>
+    <div th:replace="~{admin/fragmentsAdmin :: pagination('ticketList', 'tickets')}"></div>
+
+</div>
+</body>
+</html>

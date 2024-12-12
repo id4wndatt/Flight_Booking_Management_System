@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{admin/fragmentsAdmin :: admin_head_pageList}"><title></title></head>
+<!--<head>-->
+<!--    <title>Ticket Statistics</title>-->
+<!--    &lt;!&ndash; Add Chart.js library &ndash;&gt;-->
+<!--    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>-->
+
+<!--</head>-->
+<body>
+<header th:replace="~{admin/fragmentsAdmin :: admin_header}"></header>
+
+<!-- Sidebar/menu -->
+<div th:replace="~{admin/fragmentsAdmin :: admin_menu}"></div>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div th:replace="~{admin/fragmentsAdmin :: admin_overlay}"></div>
+<div class="w3-main" style="margin-left:300px;margin-top:43px;background-color: #f1f1f1">
+    <h1 style="color: #b3d6c1;">Báo cáo doanh thu theo tháng</h1>
+    
+    <form th:action="@{/admin/statistics/printIncomeByMonth}" th:method="get">
+    <input type="hidden" name="year" th:value="${year}" />
+    <input type="hidden" name="numberOfYear" th:value="${numberOfYear}" />
+    <button type="submit">In báo cáo</button>
+	</form>
+
+<!--     <div>
+        Add a dropdown to select year
+        <label for="selectYear">Select Year:</label>
+        <select id="selectYear" onchange="updateChart(this)">
+            <option value="" disabled selected>Select Year</option>
+            Render options based on uniqueYears
+            <option th:each="uniqueYear : ${uniqueYears}" th:value="${uniqueYear}" th:text="${uniqueYear}"></option>
+        </select>
+    </div> -->
+
+<!--    select5Years-->
+    <!-- <div>
+        <form th:method="GET" th:action="@{/admin/statistics/incomeByMonth}" >
+
+            <label>
+                <span>Select multiple years:</span>
+                <span>number of year:</span>
+                <select name="numberOfYear">
+                    <option th:value="${numberOfYear}" th:utext="${numberOfYear}"></option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+                <span>. Select from: </span>
+            </label>
+
+            <label>
+                <select name="year">
+                    <option th:value="${year}" th:utext="${year}"></option>
+                    Render options based on uniqueYears
+                    <option th:each="uniqueYear : ${uniqueYears}" th:value="${uniqueYear}" th:text="${uniqueYear}"></option>
+                </select>
+            </label>
+            <input type="submit" onsubmit="updateMultiChart(this)">
+        </form>
+    </div> -->
+<!--    <div>-->
+<!--        <form th:method="GET" action="/admin/statistics/ticketByMonth">-->
+<!--&lt;!&ndash;            <form th:method="GET" th:action="@{/admin/statistics/ticketByMonth(numberOfYear=${100}, year=${2019})}">&ndash;&gt;-->
+<!--            <input type="submit" value="select all">-->
+<!--        </form>-->
+<!--    </div>-->
+
+
+    <div>
+        <canvas id="ticketChart" width="400" height="200"></canvas>
+    </div>
+</div>
+<script th:inline="javascript">
+    // Parse data from Thymeleaf model to JavaScript variable
+    var costDataList = /*[[${costDataList}]]*/ '[[${costDataList}]]';
+    var selectedMultiYears = /*[[${getNumberYearsFrom}]]*/ '[[${getNumberYearsFrom}]]';
+    console.log(selectedMultiYears)
+
+    // Group data by month and year
+    var dataByMonthAndYear = {};
+    for (var i = 0; i < costDataList.length; i++) {
+        var data = costDataList[i];
+        var monthYear = data.year + "-" + data.month;
+        if (!dataByMonthAndYear[monthYear]) {
+            dataByMonthAndYear[monthYear] = {
+                month: data.month,
+                ticketCosts: []
+            };
+        }
+        dataByMonthAndYear[monthYear].ticketCosts.push(data.ticketCost);
+    }
+
+    // Get unique months and years
+    var uniqueMonths = [...new Set(costDataList.map(data => data.month))];
+    var uniqueMonthss = [...new Set(costDataList.map(data => "M"+data.month))];
+    var uniqueYears = [...new Set(costDataList.map(data => data.year))];
+
+    // Prepare datasets for Chart.js
+    var datasets = selectedMultiYears.map(data=>data).map((year, index) => ({
+        label: "Year " + year,
+        data: uniqueMonths.map(month => dataByMonthAndYear[year + "-" + month]?.ticketCosts[0] || 0),
+        backgroundColor: 'rgba(' + (index * 50) + ', ' + (255 - index * 10) + ', ' + (255 - index * 50) + ', 0.3)',
+        borderColor: 'rgba(' + (index * 50) + ', ' + (255 - index * 10) + ', ' + (255 - index * 50) + ', 1)',
+        borderWidth: 1
+    }));
+
+    // Draw column chart using Chart.js
+    var ctx = document.getElementById('ticketChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: uniqueMonthss,
+            datasets: datasets
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // Function to update the chart when a new year is selected
+    function updateChart() {
+        var selectedYear = document.getElementById('selectYear').value;
+
+        if (selectedYear) {
+            myChart.data.labels = uniqueMonthss;
+            myChart.data.datasets = [{
+                label: "Year " + selectedYear,
+                data: uniqueMonths.map(month => dataByMonthAndYear[selectedYear + "-" + month]?.ticketCosts[0] || 0),
+                backgroundColor: 'rgba(0, 123, 255, 0.3)',
+                borderColor: 'rgba(0, 123, 255, 1)',
+                borderWidth: 1
+            }];
+            myChart.update();
+        }
+    }
+
+    console.log(selectedMultiYears.map(data=> data));
+
+    function updateMultiChart() {
+
+        if(selectedMultiYears) {
+            myChart.data.labels = uniqueMonths;
+            myChart.data.datasets = selectedMultiYears.map(data=>data).map((year, index) => ({
+                label: "Year " + year,
+                data: uniqueMonths.map(month => dataByMonthAndYear[year + "-" + month]?.ticketCosts[0] || 0),
+                backgroundColor: 'rgba(' + (index * 50) + ', ' + (255 - index * 2) + ', ' + (255 - index * 30) + ', 0.3)',
+                borderColor: 'rgba(' + (index * 50) + ', ' + (255 - index * 2) + ', ' + (255 - index * 30) + ', 1)',
+                borderWidth: 1
+            }))
+            myChart.update();
+        }
+    }
+</script>
+
+
+</body>
+</html>

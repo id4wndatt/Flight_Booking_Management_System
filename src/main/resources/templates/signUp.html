@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head th:replace="~{fragments::html_head}">
+    <script th:src="@{../static/script.js}"></script>
+<body>
+    <!-- Navigation Bar -->
+    <div th:replace="~{fragments::navigationBar}"/>
+    <!-- Header -->
+    <header class="w3-display-container w3-content w3-hide-small" style="max-width:1500px">
+        <div th:if="${messageSuccess}">
+            <script>
+                Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: '[[${messageSuccess}]]',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            </script>
+        </div>
+        <div th:if="${messageError}">
+            <script>
+                Swal.fire({
+                    position: 'center',
+                    icon: 'error',
+                    title: '[[${messageError}]]',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            </script>
+        </div>
+        <img class="w3-image" th:src="@{/w3images/london2.jpg}" alt="London" width="1500" height="700">
+        <div class="w3-container w3-display-middle w3-white w3-card-4" style="width: 400px;padding: 0;">
+            <div class="w3-display-top-middle w3-text-red" >
+                <h1 style="text-align: center;">GOGO</h1>
+            </div>
+            <div th:if="${message}" class="w3-panel w3-pale-red w3-text-red">[[${message}]]</div>
+            <form th:action="@{/account/signup/save}" id="form_signup" th:object="${user}" th:method="post" class="w3-container">
+                <input name="userid" th:field="*{userID}" type="hidden">
+                <input id="role" name="role" th:field="*{role}" th:type="hidden" th:value="1" class="w3-input w3-border" >
+                <p>
+                    <label>Tên tài khoản</label>
+                    <input th:field="*{username}" name="username" id="username" class="w3-input w3-border" type="text" required>
+                </p>
+                <p>
+                    <lable>Mật khẩu</lable>
+                    <input id="password" name="password" th:field="*{password}" class="w3-input w3-border" type="password" required>
+                </p>
+                <p>
+                    <lable>Nhập lại mật khẩu</lable>
+                    <input name="refill_password" id="refill_password" class="w3-input w3-border" type="password" required>
+                </p>
+                <p>
+                    <lable>Email</lable>
+                <input name="email" id="email" class="w3-input w3-border" type="email" required>
+                </p>
+                <p style="text-align: center;"><input class="w3-btn w3-red" id="btnSignUp" style="width: 100px;" type="submit" value="Sign up"></p>
+            </form>
+            <script>
+                $(document).ready(function (){
+                    $.validator.addMethod("passwordRule",function (value,element,args) {
+                        return /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[A-Za-z0-9])(?=.{8,})/.test(value);
+                    },'Mật khẩu phải có 1 chữ thường, 1 chữ hoa, 1 chữ số, 1 ký tự đặc biệt và ít nhất 8 ký tự');
+                    $.validator.addMethod("emailRule",function (value,element,args) {
+                        return /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$/.test(value);
+                    },'Email này không hợp lệ!');
+                    $("#form_signup").validate({
+                        rules:{
+                            username:{
+                                minlength:5
+                            },
+                            refill_password:{
+                                equalTo:'#password'
+                            },
+                            password:{
+                                minlength: 8,
+                                passwordRule:true
+                            },
+                            email:{
+                                emailRule:true
+                            }
+                        },
+                        messages:{
+                            username:{
+                                required:"Vui lòng nhập tên người dùng!",
+                                minlength:"Vui lòng nhập ít nhất 5 ký tự"
+                            },
+                            password:{
+                                required:"Vui lòng nhập mật khẩu!",
+                            },
+                            refill_password:{
+                                required:"Vui lòng nạp lại mật khẩu!",
+                                equalTo: "Mật khẩu và mật khẩu được nạp lại phải khớp nhau!"
+                            },
+                            email:{
+                                required:"Vui lòng nhập email của bạn!"
+                            }
+                        }
+                    });
+                });
+            </script>
+        </div>
+    </header>
+    <footer th:replace="~{fragments::footer}" />
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head th:replace="~{admin/fragmentsAdmin :: admin_head_pageList}"/>
+<body>
+<style>
+  .error {
+    color: red;
+  }
+  p {
+    padding: 0;
+    margin: 0;
+  }
+  .paddingName {
+    padding: 10px 0 4px;
+  }
+</style>
+
+<!-- Top container -->
+<header th:replace="~{admin/fragmentsAdmin :: admin_header}"/>
+
+<!-- Sidebar/menu -->
+<div th:replace="~{admin/fragmentsAdmin :: admin_menu}"></div>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div th:replace="~{admin/fragmentsAdmin :: admin_overlay}"></div>
+
+<!-- !PAGE CONTENT! -->
+<div class="w3-main" style="margin-left:300px;margin-top:43px;background-color: #f1f1f1">
+
+  <h1 style="font-weight: bold; font-size: 25px; padding: 25px 15px">Thêm mới hạng ghế</h1>
+  <form style="padding-left: 20px;" th:method="POST" th:action="@{/admin/addSeatCategory}">
+    <p class="paddingName">Tên hạng ghế</p>
+    <input type="text" name="categoryName" placeholder="categoryName"/>
+<!--    <p th:if="${categoryName}" class="error">[[${categoryName}]]</p>-->
+    <br/>
+    <p class="paddingName">Hành lý cho phép</p>
+    <input type="text" name="luggageAttach" placeholder="luggageAttach"/>
+<!--    <p th:if="${luggageAttach}" class="error">[[${luggageAttach}]]</p>-->
+    <br/>
+    <p class="paddingName">Phụ phí</p>
+    <input type="number" value="0" name="feeCategory" placeholder="feeCategory"/>
+<!--    <p th:if="${feeCategory}" class="error">[[${feeCategory}]]</p>-->
+    <br/>
+    <br/>
+    <button type="submit" value="add">Thêm mới</button>
+  </form>
+  <a href="/admin/seatCategoryList">Danh sách hạng ghế</a>
+</div>
+</body>
+</html>

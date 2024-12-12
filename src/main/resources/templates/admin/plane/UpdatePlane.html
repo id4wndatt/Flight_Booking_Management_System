@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head th:replace="~{admin/fragmentsAdmin :: admin_head_pageList}"/>
+<body>
+<style>
+    .error {
+        color: red;
+    }
+</style>
+
+<!-- Top container -->
+<header th:replace="~{admin/fragmentsAdmin :: admin_header}"/>
+
+<!-- Sidebar/menu -->
+<div th:replace="~{admin/fragmentsAdmin :: admin_menu}"></div>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div th:replace="~{admin/fragmentsAdmin :: admin_overlay}"></div>
+
+<!-- !PAGE CONTENT! -->
+<div class="w3-main" style="margin-left:300px;margin-top:43px;background-color: #f1f1f1">
+
+    <h1 style="font-weight: bold; font-size: 25px; padding: 25px 15px">Cập nhật máy bay</h1>
+
+
+    <form method="POST" th:action="@{/admin/updatePlane/{id}(id=${plane.getPlaneID()})}">
+    <p>Tên máy bay</p>
+    <input type="text" name="planeName" placeholder="Plane name" th:value="${plane.getPlane_name()}"/>
+    <p th:if="${planeName}" class="error">[[${planeName}]]</p>
+    <br/>
+    <p>Sức chứa</p>
+    <input type="number" name="slSeat" placeholder="Quantity seat" th:value="${plane.getQuantity()}">
+    <p th:if="${quantitySeat}" class="error">[[${quantitySeat}]]</p>
+    <br/>
+    <p>Hãng hàng không</p>
+    <select name="airlineID">
+        <option th:utext="${plane.getAirlineCompany().getAirline_name()}" th:value="${plane.getAirlineCompany().getAirlineID()}" disabled selected>..</option>
+        <th:block th:each="airlineCompany : ${airlineCompanies}">
+            <option th:utext="${airlineCompany.getAirlineName()}" th:value="${airlineCompany.getAirlineID()}">..</option>
+        </th:block>
+    </select>
+    <br/>
+    <button type="submit" value="update">Cập nhật</button>
+</form>
+<a href="/admin/listPlane">Danh sách máy bay</a>
+</div>
+</body>
+</html>

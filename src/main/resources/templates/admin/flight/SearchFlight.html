@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head th:replace="~{admin/fragmentsAdmin :: admin_head_pageList}"/>
+<body>
+<style>
+  .update {
+    background-color: #1c98ea;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    width: 50%;
+    border: 1px solid #000;
+  }
+  .form-delete {
+    width: 50%;
+  }
+  .delete:hover {
+    background-color: #8c0505;
+  }
+  .delete {
+    background-color: red;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+    border: 1px solid #000;
+    border-left: none;
+  }
+
+  .update:hover {
+    background-color: #0e4870;
+  }
+</style>
+
+<!-- Top container -->
+<header th:replace="~{admin/fragmentsAdmin :: admin_header}"/>
+
+<!-- Sidebar/menu -->
+<div th:replace="~{admin/fragmentsAdmin :: admin_menu}"></div>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div th:replace="~{admin/fragmentsAdmin :: admin_overlay}"></div>
+
+<!-- !PAGE CONTENT! -->
+<div class="w3-main" style="margin-left:300px;margin-top:43px;background-color: #f1f1f1">
+
+  <h1 style="font-weight: bold; font-size: 25px; padding: 25px 15px">Danh sách tìm kiếm</h1>
+  <form style="display: inline-block" th:method="GET" th:action="@{/admin/flight/search}">
+    <input style="min-width: 250px" type="text" placeholder="Tìm kiếm điểm đi hoặc điểm tới name="search" th:value="${query}">
+    <input type="submit" value="Tìm kiếm">
+  </form>
+
+  <table class="table">
+    <thead>
+    <tr>
+      <th><a href="/admin/flightList?sortBy=flightID">Mã số chuyến bay</a></th>
+      <th><a href="/admin/flightList?sortBy=departingForm">Điểm đi</a></th>
+      <th><a href="/admin/flightList?sortBy=arrivingAt">Điểm đến</a></th>
+      <th><a href="/admin/flightList?sortBy=flightTime">Thời gian cất cánh</a></th>
+      <th><a href="/admin/flightList?sortBy=departureTime">Thời gian hạ cánh dự kiến</a></th>
+      <th><a href="/admin/flightList?sortBy=feeFlight">Phí chuyến bay</a></th>
+      <th>Hành động</th>
+    </tr>
+    </thead>
+    <tbody>
+    <th:block th:each="flight : ${flights}">
+      <tr>
+        <td th:utext="${flight.getFlightID()}">..</td>
+        <td th:utext="${flight.getDeparting_from()}">..</td>
+        <td th:utext="${flight.getArriving_at()}">..</td>
+        <td th:utext="${flight.getFormatTime(flight.getFlight_time())}">..</td>
+        <td th:utext="${flight.getFormatTime(flight.getDeparture_time())}">..</td>
+        <td th:utext="${flight.getFormatFeeFlight(flight.getFee_flight())}">..</td>
+
+        <td style="display: flex">
+          <button class="update">
+            <a style="text-decoration: none; color: white;" th:href="@{/admin/updateFlight/{id}(id=${flight.getFlightID()})}">Cập nhật</a>
+          </button>
+
+          <form class="form-delete" method="POST" th:action="@{/admin/deleteFlight/{id}(id=${flight.getFlightID()})}">
+            <button  class="delete" type="submit" onclick="if (!(confirm('Bạn có chắc chắn xoá chuyến bay này không?'))) return false">Xoá</button>
+          </form>
+        </td>
+      </tr>
+    </th:block>
+    </tbody>
+  </table>
+
+  <a href="/admin/addFlight">Thêm mới chuyến bay</a>
+  <br/>
+  <a href="/admin/flightList">Danh sách chuyến bay</a>
+</div>
+</body>
+</html>

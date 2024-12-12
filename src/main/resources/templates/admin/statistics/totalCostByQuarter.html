@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{admin/fragmentsAdmin :: admin_head_pageList}"><title></title></head>
+
+<body>
+<header th:replace="~{admin/fragmentsAdmin :: admin_header}"></header>
+
+<!-- Sidebar/menu -->
+<div th:replace="~{admin/fragmentsAdmin :: admin_menu}"></div>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div th:replace="~{admin/fragmentsAdmin :: admin_overlay}"></div>
+<div class="w3-main" style="margin-left:300px;margin-top:43px;background-color: #f1f1f1">
+    <h1 style="color: #3CA5CD;">Báo cáo doanh thu theo quý</h1>
+    
+        <form th:action="@{/admin/statistics/printIncomeByQuarter}" th:method="get">
+    <input type="hidden" name="year" th:value="${year}" />
+    <input type="hidden" name="numberOfYear" th:value="${numberOfYear}" />
+    <button type="submit">In báo cáo</button>
+	</form>
+
+    <div>
+        <canvas id="ticketChart" width="400" height="200"></canvas>
+    </div>
+</div>
+<script th:inline="javascript">
+    // Parse data from Thymeleaf model to JavaScript variable
+    var costDataList = /*[[${costDataList}]]*/ '[[${costDataList}]]';
+
+    // Group data by quarter and year
+    var dataByQuarterAndYear = {};
+    for (var i = 0; i < costDataList.length; i++) {
+        var data = costDataList[i];
+        var quarterYear = data.year + "-" + data.quarter;
+        if (!dataByQuarterAndYear[quarterYear]) {
+            dataByQuarterAndYear[quarterYear] = {
+                quarter: data.quarter,
+                ticketCosts: []
+            };
+        }
+        dataByQuarterAndYear[quarterYear].ticketCosts.push(data.ticketCost);
+    }
+
+    // Get unique quarters and years
+    var uniqueQuarters = [...new Set(costDataList.map(data => data.quarter))];
+    var uniqueYears = [...new Set(costDataList.map(data => data.year))];
+
+    // Prepare datasets for Chart.js
+    var datasets = uniqueYears.map((year, index) => ({
+        label: "Year " + year,
+        data: uniqueQuarters.map(quarter => dataByQuarterAndYear[year + "-" + quarter]?.ticketCosts[0] || 0),
+        backgroundColor: 'rgba(' + (index * 60) + ', ' + (255 - index * 90) + ', ' + (255 - index * 50) + ', 1)',
+        borderColor: 'rgba(' + (index * 60) + ', ' + (255 - index * 90) + ', ' + (255 - index * 50) + ', 1)',
+        fill: false
+    }));
+
+    // Draw column chart using Chart.js
+    var ctx = document.getElementById('ticketChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: uniqueQuarters,
+            datasets: datasets
+        },
+        options: {
+            legend: {display: false}
+        }
+    });
+</script>
+
+</body>
+</html>

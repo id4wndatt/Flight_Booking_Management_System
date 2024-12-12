@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head th:replace="~{fragments::html_head}"/>
+<body class="w3-light-grey">
+
+<!-- Navigation Bar -->
+<div th:replace="~{fragments::navigationBar}"/>
+
+<!-- Page Container -->
+<div th:if="${error}">
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: '[[${error}]]',
+            footer: ''
+        })
+    </script>
+</div>
+<div  class="w3-content w3-margin-top" style="max-width:1400px;min-height: 741px;" th:if="${session.flightSelected}">
+    <div class="w3-container w3-card w3-white w3-margin-bottom">
+        <p class="w3-margin-top w3-text-red">Your order is available in 15 minutes.</p>
+
+    </div>
+    <!-- The Grid -->
+    <div class="w3-row-padding">
+        <!--        th:action="@{/api/payment/create-payment}"-->
+        <!-- Right Column -->
+        <script>
+            function doPost(){
+                jsonData = {
+                    fullname: $("#fullname").val(),
+                    email: $("#email").val(),
+                    phone: $("#phone").val(),
+                    address: $("#address").val(),
+                    citizenIdentification: $("#citizenIdentification").val()
+                };
+                $.post("http://localhost:8080/api/payment/create-payment",jsonData,function(data,status){
+                    Swal.fire({
+                        position: 'center',
+                        showConfirmButton: false,
+                        icon: status,
+                        title: 'Congratulation',
+                        text: "Create order successfully",
+                        footer: "Please pay in 15 minutes!",
+                        timer: 1500
+                    });
+                    alert(data);
+                    window.location.replace(data);
+                });
+            }
+        </script>
+        <!--        th:action="@{/api/payment/create-payment}" method="post"-->
+        <div class="w3-twothird w3-container">
+            <!--                <form id="form_order" name="form_order" onsubmit="doPost()" >-->
+            <h3 class="w3-text-black w3-padding-16 w3-panel w3-pale-blue w3-leftbar w3-rightbar w3-border-blue ">Payment's information</h3>
+            <div class="w3-container w3-card w3-white w3-margin-bottom w3-padding-16">
+                <div class="w3-container">
+                    <h5 class="w3-opacity"><b>Full name *</b></h5>
+                    <input class="w3-input" type="text" name="fullname" id="fullname" required minlength="1">
+                </div>
+                <div class="w3-container">
+                    <h5 class="w3-text-grey "><i class="fa fa-envelope fa-fw w3-margin-right w3-text-teal"></i>Email *</h5>
+                    <input class="w3-input"  type="email" id="email" name="email" required >
+                </div>
+                <div class="w3-container w3-half">
+                    <h5 class="w3-text-grey "><i class="fa fa-phone fa-fw w3-margin-right w3-text-teal"></i>Phone number *</h5>
+                    <input class="w3-input" type="text" id="phone" name="phone" required minlength="10" maxlength="10">
+                </div>
+                <div class="w3-container w3-half">
+                    <h5 class="w3-text-grey "><i class="fa fa-phone fa-fw w3-margin-right w3-text-teal"></i>Address</h5>
+                    <input class="w3-input" type="text" id="address" name="address" required>
+                </div>
+                <div class="w3-container w3-half">
+                    <h5 class="w3-text-grey ">Citizen identification*</h5>
+                    <input class="w3-input" type="text" id="citizenIdentification" name="citizenIdentification" required>
+                </div>
+                <div class="w3-container w3-half">
+                    <h5 class="w3-text-grey ">Payment method</h5>
+                    <input class="" type="radio" name="payment_method" value="vnpay" checked required> VNPay <img style="width: 50px;height: 50px;" src="/w3images/vnpay.png" alt="VNPay">
+                </div>
+            </div>
+            <div class="w3-container ">
+                <input id="btnPay" class="w3-card w3-button w3-red w3-round w3-right w3-margin-top" style="width: 200px;" type="button" onclick="doPost()" value="Pay">
+            </div>
+            <!--                </form>-->
+        </div>
+
+        <!-- End Right Column -->
+        <!-- Left Column -->
+        <div class="w3-third">
+            <h3 class="w3-text-black w3-padding-16">Flight's detail</h3>
+            <th:block th:each="fs : ${session.flightSelected}">
+                <th:block th:each = "plane : ${fs.getFlight().getPlanes()}">
+                    <div class="w3-container w3-card w3-white w3-margin-bottom">
+                        <p class="w3-panel w3-pale-blue w3-leftbar w3-rightbar w3-border-blue "><span th:text="${fs.getFlight().getDeparting_from()}"></span>     <i class="fa fa-solid fa-plane"></i>     <span th:text="${fs.getFlight().getArriving_at()}"></span> <span class="w3-right">VND</span><span th:text="${fs.getFlight().getFee_flight()*session.adults + fs.getFlight().getFee_flight()*session.child*0.8}" class="w3-right"></span> </p>
+                        <p class="w3-panel w3-pale-khaki w3-leftbar w3-rightbar w3-border-khaki ">Departure <span th:text="${fs.getFlight().getDeparture_time()}"></span>, <span th:text="${fs.getFlight().getDate_flight()}"></span></p>
+                        <h6 class="w3-panel w3-leftbar w3-rightbar "><span th:text="${fs.getFlight().getDeparting_from()}"></span>     <i class="fa fa-solid fa-plane"></i>     <span th:text="${fs.getFlight().getArriving_at()}"></span></h6>
+                        <p>Travel time: <span th:text="${fs.getFlight().getTravel_time()}"></span>/Direct Flight</p>
+                        <p>Plane <span class="w3-text-blue" th:text="${plane.getPlane_name()}"></span></p>
+                        <p>Operator <span class="w3-text-blue" th:text="${plane.getAirlineCompany().getAirline_name()}"></span></p>
+                        <h6 class="w3-panel w3-pale-khaki w3-leftbar w3-rightbar w3-border-khaki">Adult x <span class="w3-text-blue" th:text="${session.adults}"></span> <span class="w3-right">VND</span> <span class="w3-right" th:text="${fs.getFlight().getFee_flight()*session.adults}"></span></h6>
+                        <div th:if="${session.child}">
+                            <h6 class="w3-panel w3-pale-khaki w3-leftbar w3-rightbar w3-border-khaki">Child x <span class="w3-text-blue" th:text="${session.child}"></span> <span class="w3-right">VND</span><span class="w3-right" th:text="${fs.getFlight().getFee_flight()*session.child*0.8}"></span></h6>
+                        </div>
+                        <h6 class="w3-panel w3-pale-khaki w3-leftbar w3-rightbar w3-border-khaki">Seat's category: <span th:text="${session.seatClass.getCategoryName()}"></span> <span class="w3-right">VND</span> <span class="w3-right" th:text="${session.seatClass.getFeeCategory()}"></span></h6>
+                        <p class="w3-panel w3-pale-khaki w3-leftbar w3-rightbar w3-border-khaki w3-white w3-card">Extra luggage - <span th:text="${fs.getCustomer().getFullname()}"></span><span class="w3-right"><span th:text="${fs.getLuggage().getCost()}"></span>VND</span><span class="w3-right">(<span th:text="${fs.getLuggage().getWeight()}"></span>kg)</span></p>
+                        <div th:if="${fs.getSeat()}">
+                            <h6 class="w3-panel w3-pale-khaki w3-leftbar w3-rightbar w3-border-khaki">Seat x <span class="w3-text-blue" th:text="${fs.getSeat().getPosition()}"></span></h6>
+                        </div>
+                    </div>
+                </th:block>
+            </th:block>
+            <h3 class="w3-panel w3-pale-blue w3-leftbar w3-rightbar w3-border-blue">Total  <span class="w3-right">VND</span><span class="w3-right" th:text="${session.totalBill}"></span></h3>
+            <!-- End Left Column -->
+        </div>
+    </div>
+
+    <!-- End Page Container -->
+</div>
+<footer th:replace="~{fragments::footer}" />
+</body>
+</html>

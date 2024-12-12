@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head th:replace="~{fragments::html_head}"/>
+<body class="w3-light-grey">
+
+<!-- Navigation Bar -->
+<div th:replace="~{fragments::navigationBar}"/>
+
+<!-- Page Container -->
+<div  class="w3-content w3-margin-top" style="max-width:1400px;min-height: 741px;" th:if="${session.flightSelected}">
+    <div th:if="${error}">
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: '[[${error}]]',
+                footer: ''
+            })
+        </script>
+    </div>
+    <!-- The Grid -->
+    <div class="w3-row-padding">
+
+    <!-- Right Column -->
+        <div class="w3-twothird">
+            <form th:id="form" name="form_info" th:action="@{/flights/saveInfor}" method="post">
+                <th:block th:each="adult : ${adults}">
+                    <h3 class="w3-text-black w3-padding-16 w3-panel w3-pale-blue w3-leftbar w3-rightbar w3-border-blue ">Passenger <span th:text="${adult} + 1"></span></h3>
+                        <div class="w3-container w3-card w3-white w3-margin-bottom w3-padding-16">
+                                <div class="w3-container">
+                                    <h5 class="w3-opacity"><b>Full name *</b></h5>
+                                    <input class="w3-input" type="text" th:name="'fullname'+ ${adult}" required minlength="1">
+                                </div>
+                                <div class="w3-container w3-third">
+                                    <h5 class="w3-opacity"><b>Sex</b></h5>
+                                    <input class="w3-input" type="text" th:name="'sex'+ ${adult}" required>
+                                </div>
+                                <div class="w3-container w3-twothird">
+                                    <h5 class="w3-opacity"><b>Birthday</b></h5>
+                                    <input class="w3-input" type="date" th:name="'birthday'+ ${adult}" required>
+                                </div>
+                                <div class="w3-container">
+                                    <h5 class="w3-text-grey "><i class="fa fa-envelope fa-fw w3-margin-right w3-text-teal"></i>Email *</h5>
+                                    <input class="w3-input" type="email" th:name="'email'+ ${adult}" required >
+                                </div>
+                                <div class="w3-container w3-half">
+                                    <h5 class="w3-text-grey "><i class="fa fa-phone fa-fw w3-margin-right w3-text-teal"></i>Phone number *</h5>
+                                    <input class="w3-input" type="text" th:name="'phone'+ ${adult}" required minlength="10" maxlength="10">
+                                </div>
+                                <div class="w3-container w3-half">
+                                    <h5 class="w3-opacity"><b>Extra luggage</b></h5>
+                                    <select class="w3-select" th:name="'luggage'+${adult}">
+                                        <option value="" disabled selected>Choose category luggage</option>
+                                        <th:block th:each="luggage : ${luggages}">
+                                            <option th:value="${luggage.getLuggageID()}"><span th:text="${luggage.getWeight()}"></span> kg (<span th:text="${luggage.getCost()}"></span> VND)</option>
+                                        </th:block>
+                                    </select>
+                                </div>
+                            </div>
+                    </th:block>
+                <div class="w3-container w3-pad">
+                    <input class="w3-button w3-red w3-round w3-right" type="submit" value="Select seat →">
+                </div>
+            </form>
+        </div>
+        <!-- End Right Column -->
+        <!-- Left Column -->
+        <div class="w3-third">
+            <h3 class="w3-text-black w3-padding-16">Flight's detail</h3>
+            <th:block th:each="fs : ${session.flightSelected}">
+                <th:block th:each = "plane : ${fs.getFlight().getPlanes()}">
+                    <div class="w3-container w3-card w3-white w3-margin-bottom">
+                        <p class="w3-panel w3-pale-blue w3-leftbar w3-rightbar w3-border-blue "><span th:text="${fs.getFlight().getDeparting_from()}"></span>     <i class="fa fa-solid fa-plane"></i>     <span th:text="${fs.getFlight().getArriving_at()}"></span> <span class="w3-right">VND</span><span th:text="${fs.getFlight().getFee_flight()*session.adults + fs.getFlight().getFee_flight()*session.child*0.8}" class="w3-right"></span> </p>
+                        <p class="w3-panel w3-pale-khaki w3-leftbar w3-rightbar w3-border-khaki ">Departure <span th:text="${fs.getFlight().getDeparture_time()}"></span>, <span th:text="${fs.getFlight().getDate_flight()}"></span></p>
+                        <h6 class="w3-panel w3-leftbar w3-rightbar "><span th:text="${fs.getFlight().getDeparting_from()}"></span>     <i class="fa fa-solid fa-plane"></i>     <span th:text="${fs.getFlight().getArriving_at()}"></span></h6>
+                        <p>Travel time: <span th:text="${fs.getFlight().getTravel_time()}"></span>/Direct Flight</p>
+                        <p>Plane <span class="w3-text-blue" th:text="${plane.getPlane_name()}"></span></p>
+                        <p>Operator <span class="w3-text-blue" th:text="${plane.getAirlineCompany().getAirline_name()}"></span></p>
+                        <h6 class="w3-panel w3-pale-khaki w3-leftbar w3-rightbar w3-border-khaki">Adult x <span class="w3-text-blue" th:text="${session.adults}"></span> <span class="w3-right">VND</span> <span class="w3-right" th:text="${fs.getFlight().getFee_flight()*session.adults}"></span></h6>
+                        <div th:if="${session.child}">
+                            <h6 class="w3-panel w3-pale-khaki w3-leftbar w3-rightbar w3-border-khaki">Child x <span class="w3-text-blue" th:text="${session.child}"></span> <span class="w3-right">VND</span><span class="w3-right" th:text="${fs.getFlight().getFee_flight()*session.child*0.8}"></span></h6>
+                        </div>
+                        <h6 class="w3-panel w3-pale-khaki w3-leftbar w3-rightbar w3-border-khaki">Seat's category: <span th:text="${session.seatClass.getCategoryName()}"></span> <span class="w3-right">VND</span> <span class="w3-right" th:text="${session.seatClass.getFeeCategory()}"></span></h6>
+                    </div>
+                </th:block>
+            </th:block>
+            <h3 class="w3-panel w3-pale-blue w3-leftbar w3-rightbar w3-border-blue">Total  <span class="w3-right">VND</span><span class="w3-right" th:text="${session.totalBill}"></span></h3>
+            <!-- End Left Column -->
+        </div>
+</div>
+
+        <!-- End Grid -->
+    </div>
+
+    <!-- End Page Container -->
+</div>
+<footer th:replace="~{fragments::footer}" />
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head th:replace="~{admin/fragmentsAdmin :: admin_head_pageList}"/>
+<body>
+<style>
+  .error {
+    color: red;
+  }
+  p {
+    padding: 0;
+    margin: 0;
+  }
+  .paddingName {
+    padding: 10px 0 4px;
+  }
+</style>
+
+<!-- Top container -->
+<header th:replace="~{admin/fragmentsAdmin :: admin_header}"/>
+
+<!-- Sidebar/menu -->
+<div th:replace="~{admin/fragmentsAdmin :: admin_menu}"></div>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div th:replace="~{admin/fragmentsAdmin :: admin_overlay}"></div>
+
+<!-- !PAGE CONTENT! -->
+<div class="w3-main" style="margin-left:300px;margin-top:43px;background-color: #f1f1f1">
+
+  <h1 style="font-weight: bold; font-size: 25px; padding: 25px 15px">Thêm chuyến bay</h1>
+<form style="padding-left: 20px;" th:method="POST" th:action="@{/admin/addFlight}">
+  <p class="paddingName">Cất cánh từ: </p>
+  <input type="text" name="departingForm" placeholder="departingForm"/>
+  <p th:if="${departingForm}" class="error">[[${departingForm}]]</p>
+  <br/>
+  <p class="paddingName">Hạ cánh tới:</p>
+  <input type="text" name="arrivingAt" placeholder="arrivingAt"/>
+  <p th:if="${arrivingAt}" class="error">[[${arrivingAt}]]</p>
+  <br/>
+  <p class="paddingName">Ngày khởi hành:</p>
+  <input type="date" name="dateFlight" placeholder="dateFlight"/>
+  <p th:if="${dateFlight}" class="error">[[${dateFlight}]]</p>
+  <br/>
+  <p class="paddingName">Thời gian hạ cánh:</p>
+  <input type="time" name="flightTime" placeholder="flightTime"/>
+  <p th:if="${flightTime}" class="error">[[${flightTime}]]</p>
+  <br/>
+  <p class="paddingName">Thời gian cất cánh:</p>
+  <input type="time" name="departureTime" placeholder="departureTime"/>
+  <p th:if="${departureTime}" class="error">[[${departureTime}]]</p>
+  <br/>
+  <p class="paddingName">Phí chuyến bay:</p>
+  <input type="number" value="0" name="feeFlightx" placeholder="feeFlight">
+  <p th:if="${feeFlight}" class="error">[[${feeFlight}]]</p>
+  <br/>
+  <br/>
+  <button type="submit" value="add">Thêm mới</button>
+</form>
+<a href="/admin/flightList">Danh sách chuyến bay</a>
+</div>
+</body>
+</html>

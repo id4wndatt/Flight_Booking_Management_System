@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head th:replace="~{fragments::html_head}"/>
+<body class="w3-light-grey">
+
+<!-- Navigation Bar -->
+<div th:replace="~{fragments::navigationBar}"/>
+
+<!-- Page Container -->
+<div th:if="${success}">
+    <script>
+        Swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: '[[${success}]]',
+            showConfirmButton: false,
+            timer: 1500
+        })
+    </script>
+</div>
+<div th:if="${error}">
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: '[[${error}]]',
+            footer: ''
+        })
+    </script>
+</div>
+<div  class="w3-content w3-margin-top" style="max-width:1400px;min-height: 741px;">
+
+    <!-- The Grid -->
+    <div class="w3-row-padding w3-card w3-display-container w3-center w3-white">
+        <img class="w3-margin-top" style="width: 300px;" src="/w3images/thanks.png" alt="thank you">
+        <p><i>(Cảm ơn sự tin tưởng của bạn !)</i></p>
+        <div class="w3-container w3-white w3-margin-bottom">
+            <p class="w3-margin-top w3-text-green" style="font-size: 20px;">Đặt hàng thành công : <span class="w3-text-blue" th:text="${order.getQrCode()}"></span> </p>
+        </div>
+        <div>
+            <p class="w3-text-green" style="font-size: 20px;">Tổng hóa đơn <span class="w3-text-blue" th:text="${order.getTotal_cost()}"></span> </p>
+        </div>
+        <div>
+            <a class="w3-left" th:href="@{/}"><i class="fa fa-solid fa-arrow-left-to-line"></i>Quay lại trang chủ</a>
+        </div>
+    </div>
+</div>
+<footer th:replace="~{fragments::footer}" />
+</body>
+</html>

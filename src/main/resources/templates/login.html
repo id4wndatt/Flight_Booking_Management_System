@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head th:replace="~{fragments::html_head}"/>
+<body class="w3-light-grey">
+
+    <!-- Navigation Bar -->
+    <div th:replace="~{fragments::navigationBar}"/>
+
+    <!-- Header -->
+    <header class="w3-display-container w3-content w3-hide-small" style="max-width:1500px">
+        <img class="w3-image" th:src="@{/w3images/london2.jpg}" alt="London" width="1500" height="700">
+        <div class="w3-container w3-display-middle w3-white w3-card-4" style="width: 400px;padding: 0;">
+            <div class="w3-display-top-middle w3-text-red" >
+                <h1 style="text-align: center;">GOGO</h1>
+            </div>
+            <div th:if="${message}">
+                <script>
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: '[[${message}]]',
+                        footer: ''
+                    })
+                </script>
+            </div>
+
+            <form th:action="@{/account/login}" th:method="post" class="w3-container">
+                <p>
+                    <label>Tên tài khoản</label>
+                    <input name="username" id="username" class="w3-input w3-border" type="text">
+                </p>
+                <p>
+                    <lable>Mật khẩu</lable>
+                    <input name="password" id="password" class="w3-input w3-border" type="password">
+                </p>
+                <p style="text-align: center;"><button id="btnLogin" class="w3-btn w3-red" style="width: 100px;" type="submit">Đăng nhập</button></p>
+            </form>
+
+        </div>
+    </header>
+    <footer th:replace="~{fragments::footer}" />
+</body>
+</html>

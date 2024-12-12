@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thống kê vé theo tháng</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        table, th, td { border: 1px solid #ddd; }
+        th, td { padding: 10px; text-align: left; }
+        th { background-color: #f4f4f4; }
+    </style>
+</head>
+<body>
+    <h1>Thống kê vé theo tháng</h1>
+    <p><strong>Năm:</strong> [[${year}]]</p>
+    <table>
+        <thead>
+            <tr>
+                <th>Tháng</th>
+                <th>Số lượng vé bán</th>
+                <th>Doanh thu</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="ticket : ${ticketDataList}">
+                <td th:text="${ticket.month}"></td>
+                <td th:text="${ticket.ticketCount}"></td>
+                <td th:text="${ticket.revenue}"></td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

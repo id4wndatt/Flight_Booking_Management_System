@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head th:replace="~{admin/fragmentsAdmin :: admin_head_pageList}"/>
+<body>
+<style>
+  .update {
+    background-color: #1c98ea;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+    border: 1px solid #000;
+  }
+  .form-delete {
+    width: 50%;
+  }
+  .delete:hover {
+    background-color: #8c0505;
+  }
+  .delete {
+    background-color: red;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+    border: 1px solid #000;
+    border-left: none;
+  }
+
+  .update:hover {
+    background-color: #0e4870;
+  }
+</style>
+
+<!-- Top container -->
+<header th:replace="~{admin/fragmentsAdmin :: admin_header}"/>
+
+<!-- Sidebar/menu -->
+<div th:replace="~{admin/fragmentsAdmin :: admin_menu}"></div>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div th:replace="~{admin/fragmentsAdmin :: admin_overlay}"></div>
+
+<!-- !PAGE CONTENT! -->
+<div class="w3-main" style="margin-left:300px;margin-top:43px;background-color: #f1f1f1">
+
+  <div th:if="${message != null}" class="alert alert-success text-center">
+    [[${message}]]
+  </div>
+  <h1 style="font-weight: bold; font-size: 25px; padding: 25px 15px">Airline company List</h1>
+
+  <a th:href="@{/admin/airlineCompanies/new}">Add new airline company</a>
+
+  <div>
+    <form th:action="@{/admin/airlineCompanies/page/1}" class="form-inline mb-3">
+      <input type="hidden" name="sortField" th:value="${sortField}"/>
+      <input type="hidden" name="sortDir" th:value="${sortDir}"/>
+      Filter:&nbsp;
+      <input type="search" name="keyword" th:value="${keyword}" class="form-control" required/>
+      &nbsp;&nbsp;
+      <input type="submit" value="Search" class="btn btn-primary"/>
+      &nbsp;&nbsp;
+      <input type="button" value="Clear" class="btn" onclick="clearFilter()" style="background-color: #cccccc"/>
+    </form>
+  </div>
+
+  <table class="table">
+    <thead>
+    <tr>
+      <th th:replace="~{admin/fragmentsAdmin :: column_link('airlineID', 'Airline ID', 'airlineCompanies')}"></th>
+      <th th:replace="~{admin/fragmentsAdmin :: column_link('airlineName', 'Airline Name', 'airlineCompanies')}"></th>
+      <th>Logo</th>
+      <th style="width: 170px;">Action</th>
+    </tr>
+    </thead>
+    <tbody>
+      <!--        <li th:utext="${plane.getAirlineID()}">..</li>-->
+      <tr th:each="airlineCompany : ${listAirlineCompany}">
+        <td>[[${airlineCompany.airlineID}]]</td>
+        <td>[[${airlineCompany.airlineName}]]</td>
+        <td>
+          <span th:if="${airlineCompany.airlineLogo == null}" class="fas fa-portrait fa-3x icon-silver"></span>
+          <img th:if="${airlineCompany.airlineLogo != null}" th:src="@{${airlineCompany.getPhotosImagePath()}}" style="width: 200px;"/>
+        </td>
+        <td style="display: flex">
+            <a class="update text-center" style="text-decoration: none; color: white;" th:href="@{'/admin/airlineCompanies/edit/' + ${airlineCompany.airlineID}}">edit</a>
+
+            <a class="delete text-center link-delete"
+               th:href="@{'/admin/airlineCompanies/delete/' + ${airlineCompany.airlineID}}"
+               th:airlineID="${airlineCompany.airlineID}"
+               title="Delete this user">Delete</a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div th:replace="~{admin/fragmentsAdmin :: pagination('airlineCompanies', 'Airline Companies')}"></div>
+
+  <div class="modal fade text-center" id="confirmModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Delete confirmation</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+
+        <div class="modal-body">
+          <span id="confirmText"></span>
+        </div>
+
+        <div class="modal-footer">
+          <a class="btn btn-success" href="" id="yesButton">Yes</a>
+          <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<script>
+  $(document).ready(function() {
+    $(".link-delete").on("click", function(e) {
+      e.preventDefault();
+      link = $(this);
+      airlineID = link.attr("airlineID");
+      $("#yesButton").attr("href", link.attr("href"));
+      $("#confirmText").text("Are you sure to delete this airline company ID " + airlineID + "?");
+      $("#confirmModal").modal();
+    });
+  });
+  function clearFilter() {
+    window.location = "[[@{/admin/airlineCompanies}]]"
+  }
+</script>
+</body>
+</html>
